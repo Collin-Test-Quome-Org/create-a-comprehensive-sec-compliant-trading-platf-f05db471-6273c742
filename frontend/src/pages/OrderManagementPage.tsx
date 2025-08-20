@@ -1,90 +1,105 @@
-import { motion } from 'framer-motion';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { useState } from 'react';
+import { motion } from 'framer-motion';
+import { XCircle, CheckCircle2, Loader2 } from 'lucide-react';
 
-const mockOrders = [
-  { id: 'ORD-001', symbol: 'AAPL', type: 'Buy', qty: 20, price: 192.10, status: 'Filled' },
-  { id: 'ORD-002', symbol: 'TSLA', type: 'Sell', qty: 5, price: 1023.00, status: 'Pending' },
-  { id: 'ORD-003', symbol: 'AMZN', type: 'Buy', qty: 3, price: 3490.10, status: 'Cancelled' },
+const fakeOrders = [
+  {
+    id: 'ORD-1001',
+    symbol: 'AAPL',
+    side: 'Buy',
+    qty: 50,
+    price: 187.25,
+    status: 'Filled',
+    time: '2024-06-01 09:15:12',
+  },
+  {
+    id: 'ORD-1002',
+    symbol: 'TSLA',
+    side: 'Sell',
+    qty: 10,
+    price: 760.50,
+    status: 'Pending',
+    time: '2024-06-01 10:08:29',
+  },
+  {
+    id: 'ORD-1003',
+    symbol: 'GOOG',
+    side: 'Buy',
+    qty: 5,
+    price: 2795.00,
+    status: 'Cancelled',
+    time: '2024-06-01 10:27:44',
+  },
 ];
 
+function getStatusIcon(status: string) {
+  if (status === 'Filled') return <CheckCircle2 className="h-5 w-5 text-green-700" />;
+  if (status === 'Pending') return <Loader2 className="h-5 w-5 text-blue-600 animate-spin" />;
+  return <XCircle className="h-5 w-5 text-red-600" />;
+}
+function getStatusBadge(status: string) {
+  if (status === 'Filled') return <Badge className="bg-green-100 text-green-700">Filled</Badge>;
+  if (status === 'Pending') return <Badge className="bg-blue-100 text-blue-700">Pending</Badge>;
+  return <Badge className="bg-red-100 text-red-700">Cancelled</Badge>;
+}
+
 export function OrderManagementPage() {
-  const [orders, setOrders] = useState(mockOrders);
-
-  const handleCancel = (orderId: string) => {
-    setOrders((os) => os.map(o => o.id === orderId ? { ...o, status: 'Cancelled' } : o));
-  };
-
   return (
-    <main className="bg-slate-50 min-h-screen py-10">
-      <div className="max-w-4xl mx-auto px-4">
-        <motion.h1
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="font-roboto font-bold text-3xl md:text-4xl text-blue-800 mb-8 text-center"
-        >
-          Order Management
-        </motion.h1>
-        <Card className="shadow mb-6">
-          <CardHeader>
-            <CardTitle className="text-xl font-bold text-slate-800">Recent Orders</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="overflow-x-auto">
-              <table className="min-w-full border rounded">
-                <thead>
-                  <tr className="bg-blue-100 text-blue-900">
-                    <th className="p-2 text-left font-bold">Order ID</th>
-                    <th className="p-2 text-left font-bold">Symbol</th>
-                    <th className="p-2 text-left font-bold">Type</th>
-                    <th className="p-2 text-left font-bold">Qty</th>
-                    <th className="p-2 text-left font-bold">Price</th>
-                    <th className="p-2 text-left font-bold">Status</th>
-                    <th className="p-2 text-left font-bold">Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {orders.map(order => (
-                    <tr key={order.id} className="border-b">
-                      <td className="p-2 text-slate-800 font-mono">{order.id}</td>
-                      <td className="p-2 font-bold text-[#1d4ed8]">{order.symbol}</td>
-                      <td className="p-2">{order.type}</td>
-                      <td className="p-2">{order.qty}</td>
-                      <td className="p-2">${order.price.toFixed(2)}</td>
-                      <td className="p-2 font-bold">
-                        {order.status === 'Filled' && <span className="text-green-700">Filled</span>}
-                        {order.status === 'Pending' && <span className="text-yellow-700">Pending</span>}
-                        {order.status === 'Cancelled' && <span className="text-red-600">Cancelled</span>}
-                      </td>
-                      <td className="p-2">
-                        {order.status === 'Pending' ? (
-                          <Button
-                            id={`cancel-order-${order.id}`}
-                            size="sm"
-                            className="bg-red-500 text-white hover:bg-red-700"
-                            onClick={() => handleCancel(order.id)}
-                          >
-                            Cancel
-                          </Button>
-                        ) : (
-                          <span className="text-slate-400 text-xs">—</span>
-                        )}
-                      </td>
-                    </tr>
-                  ))}
-                  {orders.length === 0 && (
-                    <tr>
-                      <td colSpan={7} className="text-center text-slate-400 py-6">No orders.</td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
-          </CardContent>
-        </Card>
+    <main className="min-h-screen bg-gradient-to-br from-blue-50 to-white text-slate-900">
+      <div className="w-full bg-cover bg-center h-64 relative" style={{backgroundImage: "url('/branding/assets/hero-0.png')"}}>
+        <div className="absolute inset-0 bg-blue-900 bg-opacity-60 flex items-center justify-center">
+          <motion.h1 
+            initial={{ opacity: 0, y: 50 }} 
+            animate={{ opacity: 1, y: 0 }} 
+            transition={{ duration: 0.7 }}
+            className="font-roboto text-4xl md:text-5xl font-bold text-white text-center"
+          >
+            Order Management
+          </motion.h1>
+        </div>
       </div>
+      <section className="max-w-4xl mx-auto py-12 px-4">
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }} 
+          animate={{ opacity: 1, y: 0 }} 
+          transition={{ duration: 0.7 }}
+        >
+          <div className="mb-8 flex items-center gap-3">
+            <h2 className="font-roboto font-bold text-2xl text-blue-800">Recent Orders</h2>
+          </div>
+          <div className="space-y-6">
+            {fakeOrders.map((order) => (
+              <Card key={order.id} className="border-blue-100 shadow-md">
+                <CardHeader className="flex flex-row items-center gap-4 pb-2">
+                  <CardTitle className="flex items-center gap-3 font-roboto text-blue-900 font-bold text-lg">
+                    {getStatusIcon(order.status)}
+                    {order.symbol}
+                    <span className="font-normal text-xs text-slate-500">{order.id}</span>
+                  </CardTitle>
+                  {getStatusBadge(order.status)}
+                </CardHeader>
+                <CardContent>
+                  <div className="flex flex-col md:flex-row md:items-center md:justify-between">
+                    <div className="flex items-center gap-6">
+                      <span className="font-roboto text-slate-700"><strong>Side:</strong> {order.side}</span>
+                      <span className="font-roboto text-slate-700"><strong>Qty:</strong> {order.qty}</span>
+                      <span className="font-roboto text-slate-700"><strong>Price:</strong> ${order.price}</span>
+                    </div>
+                    <div className="font-roboto text-slate-500 mt-2 md:mt-0">{order.time}</div>
+                  </div>
+                  {order.status === 'Pending' && (
+                    <Button id={`cancel-order-btn-${order.id}`} size="sm" className="mt-4 bg-red-600 text-white hover:bg-red-700">
+                      Cancel Order
+                    </Button>
+                  )}
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </motion.div>
+      </section>
     </main>
   );
 }
