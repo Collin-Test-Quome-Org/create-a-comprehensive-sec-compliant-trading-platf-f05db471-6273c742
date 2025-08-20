@@ -1,41 +1,39 @@
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
+import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-export function Hero() {
+export const Hero = () => {
   return (
-    <section
-      className="relative w-full h-[440px] md:h-[540px] flex items-center justify-center bg-blue-700 overflow-hidden"
-      style={{ backgroundImage: "url('/branding/assets/hero-0.png')", backgroundSize: 'cover', backgroundPosition: 'center' }}
+    <div
+      style={{ backgroundImage: "url('/branding/assets/hero-0.png')" }}
+      className="bg-cover bg-center h-[36rem] w-full relative"
     >
-      <div className="absolute inset-0 bg-black bg-opacity-50" />
-      <motion.div
-        className="relative z-10 flex flex-col items-center justify-center w-full px-4 text-center"
-        initial={{ opacity: 0, y: 50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1 }}
-      >
-        <img src="/branding/assets/logo-0.png" className="h-20 w-20 mb-4 mx-auto" />
-        <motion.h1
-          className="font-roboto font-bold text-4xl md:text-6xl text-white drop-shadow mb-4"
+      <div className="bg-black bg-opacity-60 h-full w-full flex flex-col items-center justify-center text-center px-6">
+        <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.15, duration: 0.8 }}
+          transition={{ duration: 1 }}
+          className="max-w-2xl"
         >
-          TradeSecure: Empower Your Financial Future
-        </motion.h1>
-        <motion.p
-          className="font-roboto text-lg md:text-2xl text-slate-100 max-w-2xl mb-8"
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3, duration: 0.7 }}
-        >
-          SEC-compliant, lightning-fast trading with real-time insights, advanced portfolio tools, and uncompromising security for investors and professionals.
-        </motion.p>
-        <Button asChild size="lg" id="get-started-btn" className="bg-white text-blue-700 font-bold text-lg px-8 py-5 hover:bg-blue-50 shadow-lg">
-          <Link to="/signup">Get Started</Link>
-        </Button>
-      </motion.div>
-    </section>
+          <h1 className="text-white text-5xl md:text-6xl font-bold mb-4 font-['Roboto'] tracking-tight" style={{ fontFamily: 'Roboto, sans-serif', fontWeight: 700 }}>
+            TradeGuard: Secure. Compliant. Confident.
+          </h1>
+          <p className="text-slate-200 text-lg md:text-xl mb-8 font-['Roboto']" style={{ fontFamily: 'Roboto, sans-serif', fontWeight: 400 }}>
+            The all-in-one trading compliance, monitoring, and risk analytics suite. Protect your trades, empower your growth, and stay ahead of regulations with next-gen transparency.
+          </p>
+          <div className="flex flex-col md:flex-row gap-4 justify-center">
+            <Button asChild id="get-started-cta" size="lg" className="bg-[#1d4ed8] hover:bg-blue-700 text-white text-lg font-semibold shadow-lg">
+              <Link to="/signup">
+                Get Started <ArrowRight className="ml-2 w-5 h-5" />
+              </Link>
+            </Button>
+            <Button asChild variant="outline" id="learn-more-cta" size="lg" className="border-white text-white text-lg font-semibold hover:bg-white hover:text-[#1d4ed8]">
+              <Link to="/market-data">Explore Platform</Link>
+            </Button>
+          </div>
+        </motion.div>
+      </div>
+    </div>
   );
-}
+};
