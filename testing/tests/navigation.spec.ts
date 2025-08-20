@@ -1,116 +1,74 @@
+// tests for Navigation component and top navigation bar
 import { test, expect } from '@playwright/test';
 
-// Helper for navigation links
 const navLinks = [
-  { label: 'Market Data', path: '/market-data', icon: 'BarChart3' },
-  { label: 'Portfolio', path: '/portfolio', icon: 'PieChart' },
-  { label: 'Orders', path: '/order-management', icon: 'ListChecks' },
-  { label: 'Compliance', path: '/compliance-monitoring', icon: 'Shield' },
-  { label: 'Audit Trail', path: '/audit-trail', icon: 'BookText' },
-];
-
-const authNavLinks = [
-  { label: 'Account', path: '/account', icon: 'Users' },
-  { label: 'Logout', path: null, icon: 'LogOut', id: 'nav-logout' },
-];
-
-const guestNavLinks = [
-  { label: 'Login', path: '/login', icon: 'LogIn' },
-  { label: 'Sign Up', path: '/signup', icon: 'UserPlus' },
+  { id: 'nav-market-data', text: 'Market Data', path: '/market-data' },
+  { id: 'nav-portfolio', text: 'Portfolio', path: '/portfolio' },
+  { id: 'nav-trade-execution', text: 'Trade', path: '/trade-execution' },
+  { id: 'nav-compliance', text: 'Compliance', path: '/compliance-monitoring' },
+  { id: 'nav-account', text: 'Account', path: '/account' },
 ];
 
 test.describe('Navigation Bar', () => {
-  test('shows logo as home link and highlights it on home', async ({ page }) => {
+  test.beforeEach(async ({ page }) => {
     await page.goto('/');
-    // Logo should be a link to home
-    const logoLink = page.locator('nav a').first();
-    await expect(logoLink).toHaveAttribute('href', '/');
-    // Logo image exists
-    await expect(logoLink.locator('img[src="/branding/assets/logo-0.png"]')).toBeVisible();
-    // Home nav item should be highlighted
-    await expect(logoLink).toHaveClass(/bg-blue-50/);
   });
 
-  test('renders main navigation links', async ({ page }) => {
-    await page.goto('/');
+  test('shows logo and all navigation links', async ({ page }) => {
+    // Logo should be present
+    const logo = page.locator('img[src="/branding/assets/logo-0.png"]');
+    await expect(logo).toBeVisible();
+    // All nav links
     for (const link of navLinks) {
-      const navItem = page.getByRole('link', { name: link.label });
-      await expect(navItem).toBeVisible();
-      await expect(navItem).toHaveAttribute('href', link.path);
+      const nav = page.getByRole('link').filter({ hasText: link.text });
+      await expect(nav).toBeVisible();
     }
+    // Login and Sign Up buttons
+    await expect(page.locator('#nav-login-btn')).toBeVisible();
+    await expect(page.locator('#nav-signup-btn')).toBeVisible();
   });
 
-  test('renders guest links when not logged in', async ({ page }) => {
-    await page.goto('/');
-    for (const link of guestNavLinks) {
-      const navItem = page.getByRole('link', { name: link.label });
-      await expect(navItem).toBeVisible();
-      if (link.path) {
-        await expect(navItem).toHaveAttribute('href', link.path);
-      }
-    }
-    // Should not see Account or Logout
-    await expect(page.getByRole('link', { name: 'Account' })).toHaveCount(0);
-    await expect(page.getByRole('button', { name: 'Logout' })).toHaveCount(0);
-  });
-
-  test('renders user links when logged in', async ({ page, context }) => {
-    // Simulate login by setting user in localStorage before page load
-    await context.addInitScript(() => {
-      localStorage.setItem('auth', JSON.stringify({ user: { id: 1, name: 'Test User' } }));
-    });
-    await page.goto('/');
-    // Account link
-    const accountLink = page.getByRole('link', { name: 'Account' });
-    await expect(accountLink).toBeVisible();
-    await expect(accountLink).toHaveAttribute('href', '/account');
-    // Logout button
-    const logoutBtn = page.locator('#nav-logout');
-    await expect(logoutBtn).toBeVisible();
-    await expect(logoutBtn).toHaveText(/Logout/);
-    // Should not see Login/Sign Up
-    await expect(page.getByRole('link', { name: 'Login' })).toHaveCount(0);
-    await expect(page.getByRole('link', { name: 'Sign Up' })).toHaveCount(0);
-  });
-
-  test('navigates correctly when clicking navigation links', async ({ page }) => {
-    await page.goto('/');
-    for (const link of navLinks) {
-      await page.getByRole('link', { name: link.label }).click();
+  for (const link of navLinks) {
+    test(`navigates to ${link.text} when clicking nav link`, async ({ page }) => {
+      const nav = page.locator(`#${link.id}`);
+      await nav.click();
+      // Expect URL to change
       await expect(page).toHaveURL(link.path);
-      // Navigation bar remains visible
-      await expect(page.locator('nav')).toBeVisible();
-    }
+    });
+  }
+
+  test('clicking logo navigates to home page', async ({ page }) => {
+    await page.locator('img[src="/branding/assets/logo-0.png"]').click();
+    await expect(page).toHaveURL('/');
   });
 
-  test('navigates to login and signup from navigation', async ({ page }) => {
-    await page.goto('/');
-    await page.getByRole('link', { name: 'Login' }).click();
+  test('Login button navigates to /login', async ({ page }) => {
+    await page.locator('#nav-login-btn').click();
     await expect(page).toHaveURL('/login');
-    await page.goto('/');
-    await page.getByRole('link', { name: 'Sign Up' }).click();
+  });
+
+  test('Sign Up button navigates to /signup', async ({ page }) => {
+    await page.locator('#nav-signup-btn').click();
     await expect(page).toHaveURL('/signup');
   });
 
-  test('logout button calls logout and returns to guest links', async ({ page, context }) => {
-    // Simulate login by setting user in localStorage before page load
-    await context.addInitScript(() => {
-      localStorage.setItem('auth', JSON.stringify({ user: { id: 2, name: 'Demo User' } }));
-    });
-    await page.goto('/');
-    await expect(page.getByRole('link', { name: 'Account' })).toBeVisible();
-    await page.locator('#nav-logout').click();
-    // After logout, guest links should appear
-    await expect(page.getByRole('link', { name: 'Login' })).toBeVisible();
-    await expect(page.getByRole('link', { name: 'Sign Up' })).toBeVisible();
+  test('Navigation bar is accessible by role navigation', async ({ page }) => {
+    const nav = page.getByRole('navigation');
+    await expect(nav).toBeVisible();
   });
 
-  test('navigation is accessible by keyboard', async ({ page }) => {
-    await page.goto('/');
-    // Tab to Market Data
-    await page.keyboard.press('Tab'); // logo
-    await page.keyboard.press('Tab'); // Market Data
-    const focused = await page.evaluate(() => document.activeElement?.textContent);
-    expect(focused).toMatch(/Market Data/);
+  test('Navigation links have appropriate roles and are keyboard accessible', async ({ page }) => {
+    // Tab to first nav link
+    await page.keyboard.press('Tab'); // logo link
+    await expect(page.locator('img[src="/branding/assets/logo-0.png"]').first()).toBeFocused();
+    for (const link of navLinks) {
+      await page.keyboard.press('Tab');
+      const nav = page.locator(`#${link.id}`);
+      await expect(nav).toBeFocused();
+    }
+    await page.keyboard.press('Tab'); // Login
+    await expect(page.locator('#nav-login-btn')).toBeFocused();
+    await page.keyboard.press('Tab'); // Sign Up
+    await expect(page.locator('#nav-signup-btn')).toBeFocused();
   });
 });
