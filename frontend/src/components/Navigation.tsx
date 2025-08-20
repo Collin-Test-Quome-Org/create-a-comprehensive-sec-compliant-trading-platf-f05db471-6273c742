@@ -7,9 +7,7 @@ const navLinks = [
   { label: 'Market Data', to: '/market-data' },
   { label: 'Portfolio', to: '/portfolio' },
   { label: 'Order Management', to: '/order-management' },
-  { label: 'Compliance', to: '/compliance-monitoring' },
-  { label: 'Analytics', to: '/performance-analytics' },
-  { label: 'Audit Trail', to: '/audit-trail' },
+  // Additional links can be added here
 ];
 
 const authLinks = [
@@ -29,7 +27,7 @@ export const Navigation = () => {
           <Link to="/">
             <img src={'/branding/assets/logo-0.png'} className="h-10 w-10 rounded-lg transition-transform hover:scale-105" />
           </Link>
-          <span className="ml-2 text-2xl font-bold font-['Roboto'] text-[#1d4ed8] tracking-tight select-none hidden sm:inline" style={{ fontWeight: 700 }}>TradeGuard</span>
+          <span className="ml-2 text-2xl font-bold font-['Roboto'] text-[#1d4ed8] tracking-tight select-none hidden sm:inline" style={{ fontWeight: 700 }}>TradeSecure</span>
         </div>
         <div className="hidden md:flex flex-1 items-center justify-center">
           <NavigationMenu>
@@ -62,4 +60,4 @@ export const Navigation = () => {
       </div>
     </nav>
   );
-};
+}

@@ -7,6 +7,9 @@ import { AboutPage } from '@/pages/AboutPage';
 import { LoginPage } from '@/pages/LoginPage';
 import { SignupPage } from '@/pages/SignupPage';
 import { NotFoundPage } from '@/pages/NotFoundPage';
+import { MarketDataPage } from '@/pages/MarketDataPage';
+import { PortfolioPage } from '@/pages/PortfolioPage';
+import { OrderManagementPage } from '@/pages/OrderManagementPage';
 
 export function App() {
   return (
@@ -19,6 +22,9 @@ export function App() {
         <Route path="/about" element={<AboutPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
+        <Route path="/market-data" element={<MarketDataPage />} />
+        <Route path="/portfolio" element={<PortfolioPage />} />
+        <Route path="/order-management" element={<OrderManagementPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Router>
