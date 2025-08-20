@@ -1,108 +1,69 @@
 import { NavigationMenu, NavigationMenuList, NavigationMenuItem, NavigationMenuLink } from '@/components/ui/navigation-menu'
 import { navigationMenuTriggerStyle } from '@/components/ui/navigation-menu'
-import { LogIn, UserPlus, Shield, BarChart3, Users, BookText, FileText, ListChecks, TrendingUp, PieChart, Settings, LogOut } from 'lucide-react'
-import { Link, useLocation } from 'react-router-dom'
-import { useContext } from 'react'
-import { AuthContext } from '@/context/AuthContext'
+import { Link } from 'react-router-dom'
+import { ShieldCheck } from 'lucide-react'
 
-export const Navigation = () => {
-  const { user, logout } = useContext(AuthContext)
-  const location = useLocation()
-
-  // Logo: use brand logo from assets
-  const logo = (
-    <img src="/branding/assets/logo-0.png" className="w-10 h-10 inline-block align-middle mr-2" />
-  )
-
+export function Navigation() {
   return (
-    <nav className="w-full bg-white shadow-sm border-b border-slate-200 sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 lg:px-8 flex h-16 items-center justify-between">
-        <NavigationMenu>
-          <NavigationMenuList className="flex gap-4">
+    <nav className="w-full bg-white shadow-md border-b z-30 relative">
+      <div className="max-w-7xl mx-auto px-6 flex items-center justify-between h-20">
+        <NavigationMenu className="flex-1">
+          <NavigationMenuList className="flex gap-4 items-center">
             <NavigationMenuItem>
-              <NavigationMenuLink asChild className={navigationMenuTriggerStyle() + (location.pathname === '/' ? ' bg-blue-50 text-blue-700' : '')}>
-                <Link to="/">
-                  {logo}
-                </Link>
-              </NavigationMenuLink>
+              <Link to="/">
+                <NavigationMenuLink className={navigationMenuTriggerStyle() + ' flex items-center gap-2 p-0 bg-transparent border-none shadow-none'}>
+                  <img src={"/branding/assets/logo-0.png"} className="h-10 w-10 rounded-md" />
+                </NavigationMenuLink>
+              </Link>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-                <Link to="/market-data" className="flex items-center gap-2">
-                  <BarChart3 className="w-5 h-5 text-blue-600" /> Market Data
-                </Link>
-              </NavigationMenuLink>
+              <Link to="/market-data">
+                <NavigationMenuLink className={navigationMenuTriggerStyle()} id="nav-market-data">
+                  Market Data
+                </NavigationMenuLink>
+              </Link>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-                <Link to="/portfolio" className="flex items-center gap-2">
-                  <PieChart className="w-5 h-5 text-blue-600" /> Portfolio
-                </Link>
-              </NavigationMenuLink>
+              <Link to="/portfolio">
+                <NavigationMenuLink className={navigationMenuTriggerStyle()} id="nav-portfolio">
+                  Portfolio
+                </NavigationMenuLink>
+              </Link>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-                <Link to="/order-management" className="flex items-center gap-2">
-                  <ListChecks className="w-5 h-5 text-blue-600" /> Orders
-                </Link>
-              </NavigationMenuLink>
+              <Link to="/trade-execution">
+                <NavigationMenuLink className={navigationMenuTriggerStyle()} id="nav-trade-execution">
+                  Trade
+                </NavigationMenuLink>
+              </Link>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-                <Link to="/compliance-monitoring" className="flex items-center gap-2">
-                  <Shield className="w-5 h-5 text-blue-600" /> Compliance
-                </Link>
-              </NavigationMenuLink>
+              <Link to="/compliance-monitoring">
+                <NavigationMenuLink className={navigationMenuTriggerStyle()} id="nav-compliance">
+                  Compliance
+                </NavigationMenuLink>
+              </Link>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-                <Link to="/audit-trail" className="flex items-center gap-2">
-                  <BookText className="w-5 h-5 text-blue-600" /> Audit Trail
-                </Link>
-              </NavigationMenuLink>
+              <Link to="/account">
+                <NavigationMenuLink className={navigationMenuTriggerStyle()} id="nav-account">
+                  Account
+                </NavigationMenuLink>
+              </Link>
             </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
-        <NavigationMenu>
-          <NavigationMenuList className="flex gap-2">
-            {user ? (
-              <>
-                <NavigationMenuItem>
-                  <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-                    <Link to="/account" className="flex items-center gap-2">
-                      <Users className="w-5 h-5 text-blue-600" /> Account
-                    </Link>
-                  </NavigationMenuLink>
-                </NavigationMenuItem>
-                <NavigationMenuItem>
-                  <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-                    <button className="flex items-center gap-2" id="nav-logout" onClick={logout}>
-                      <LogOut className="w-5 h-5 text-blue-600" /> Logout
-                    </button>
-                  </NavigationMenuLink>
-                </NavigationMenuItem>
-              </>
-            ) : (
-              <>
-                <NavigationMenuItem>
-                  <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-                    <Link to="/login" className="flex items-center gap-2">
-                      <LogIn className="w-5 h-5 text-blue-600" /> Login
-                    </Link>
-                  </NavigationMenuLink>
-                </NavigationMenuItem>
-                <NavigationMenuItem>
-                  <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-                    <Link to="/signup" className="flex items-center gap-2">
-                      <UserPlus className="w-5 h-5 text-blue-600" /> Sign Up
-                    </Link>
-                  </NavigationMenuLink>
-                </NavigationMenuItem>
-              </>
-            )}
-          </NavigationMenuList>
-        </NavigationMenu>
+        <div className="flex gap-2 items-center">
+          <Link to="/login">
+            <button className="px-4 py-2 text-blue-700 font-bold rounded hover:bg-blue-50 transition" id="nav-login-btn">
+              Login
+            </button>
+          </Link>
+          <Link to="/signup">
+            <button className="px-4 py-2 bg-blue-700 text-white font-bold rounded hover:bg-blue-800 transition" id="nav-signup-btn">
+              Sign Up
+            </button>
+          </Link>
+        </div>
       </div>
     </nav>
-  )
-}

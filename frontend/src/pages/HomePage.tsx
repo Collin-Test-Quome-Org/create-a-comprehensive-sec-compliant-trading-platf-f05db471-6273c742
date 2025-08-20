@@ -1,60 +1,40 @@
-import { motion } from 'framer-motion';
-import { Button } from '@/components/ui/button';
-import { ArrowRight } from 'lucide-react';
-import { Hero } from '@/components/Hero';
+import { Hero } from '@/components/Hero'
 
 export function HomePage() {
   return (
-    <div className="w-full min-h-screen flex flex-col bg-white">
+    <div className="flex flex-col min-h-screen bg-gradient-to-br from-blue-50 to-slate-100">
       <Hero />
-      <section className="w-full max-w-6xl mx-auto px-4 py-16 grid md:grid-cols-2 gap-16 items-center">
-        <motion.div
-          initial={{ opacity: 0, x: -50 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.7 }}
-          className="flex flex-col gap-6"
-        >
-          <h2 className="text-3xl font-bold text-[#1d4ed8] font-['Roboto']">Welcome to Sentinel Compliance Suite</h2>
-          <p className="text-lg text-slate-700 font-['Roboto']">
-            We’re Sentinel, your digital fortress for secure, compliant, and intelligent trading operations. Empower your financial institution to monitor, manage, and master compliance with confidence. We blend cutting-edge oversight and instant reporting with a touch of style—because compliance shouldn’t be boring.
-          </p>
-          <div className="flex gap-4 mt-4">
-            <Button id="cta-get-started" className="text-lg px-6 py-3" asChild>
-              <a href="/signup">
-                Get Started <ArrowRight className="ml-2 w-5 h-5" />
-              </a>
-            </Button>
-            <Button id="cta-learn-more" variant="outline" className="text-lg px-6 py-3 border-[#1d4ed8] text-[#1d4ed8] hover:bg-blue-50" asChild>
-              <a href="/about">Learn More</a>
-            </Button>
+      <section className="max-w-5xl mx-auto py-20 px-6">
+        <h2 className="text-3xl md:text-4xl font-bold text-blue-900 mb-6" style={{ fontFamily: 'Roboto, sans-serif', fontWeight: 700 }}>
+          Welcome to BluePeak
+        </h2>
+        <p className="text-lg text-slate-700 mb-8" style={{ fontFamily: 'Roboto, sans-serif' }}>
+          BluePeak is your all-in-one platform for next-gen finance. We empower compliance officers, fintech analysts, and ambitious traders with robust tools for trading, portfolio management, and regulatory assurance—all wrapped in uncompromising security. Our suite of features, from real-time market insights to advanced KYC, is purpose-built for those who demand clarity, speed, and peace of mind.
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="bg-white rounded-xl shadow-md p-6 flex flex-col items-center">
+            <span className="text-blue-700 mb-3">
+              <svg xmlns="http://www.w3.org/2000/svg" className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c1.104 0 2-.896 2-2s-.896-2-2-2-2 .896-2 2 .896 2 2 2zM6.343 17.657A8.001 8.001 0 016.343 6.34m11.314 11.318a8.001 8.001 0 010-11.318m-1.414 1.414a6 6 0 010 8.486m-8.486-8.486a6 6 0 010 8.486" /></svg>
+            </span>
+            <h3 className="text-xl font-bold mb-2 text-blue-900">Total Compliance</h3>
+            <p className="text-slate-600 text-center">Automate regulatory checks and stay ahead of evolving standards with confidence.</p>
           </div>
-        </motion.div>
-        <motion.div
-          initial={{ opacity: 0, x: 50 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.7 }}
-          className="flex flex-col gap-4"
-        >
-          <ul className="space-y-6">
-            <li className="flex items-center gap-3">
-              <span className="w-3 h-3 bg-[#1d4ed8] rounded-full" />
-              <span className="font-semibold">Real-time Trade Surveillance</span>
-            </li>
-            <li className="flex items-center gap-3">
-              <span className="w-3 h-3 bg-[#94a3b8] rounded-full" />
-              <span className="font-semibold">Automated KYC & Risk Assessment</span>
-            </li>
-            <li className="flex items-center gap-3">
-              <span className="w-3 h-3 bg-[#1d4ed8] rounded-full" />
-              <span className="font-semibold">Audit Trail & Regulatory Reporting</span>
-            </li>
-            <li className="flex items-center gap-3">
-              <span className="w-3 h-3 bg-[#94a3b8] rounded-full" />
-              <span className="font-semibold">Portfolio Analytics & Performance</span>
-            </li>
-          </ul>
-        </motion.div>
+          <div className="bg-white rounded-xl shadow-md p-6 flex flex-col items-center">
+            <span className="text-blue-700 mb-3">
+              <svg xmlns="http://www.w3.org/2000/svg" className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 17v-6a1 1 0 01.293-.707l7-7a1 1 0 011.414 0l7 7A1 1 0 0120 11v6a2 2 0 01-2 2H5a2 2 0 01-2-2z" /></svg>
+            </span>
+            <h3 className="text-xl font-bold mb-2 text-blue-900">Portfolio Clarity</h3>
+            <p className="text-slate-600 text-center">Track your assets, performance, and risk with clarity. Insights for every level of expertise.</p>
+          </div>
+          <div className="bg-white rounded-xl shadow-md p-6 flex flex-col items-center">
+            <span className="text-blue-700 mb-3">
+              <svg xmlns="http://www.w3.org/2000/svg" className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h18M9 3v18m6-18v18" /></svg>
+            </span>
+            <h3 className="text-xl font-bold mb-2 text-blue-900">Real-Time Trading</h3>
+            <p className="text-slate-600 text-center">Seize opportunities with lightning-fast execution and transparent reporting. Your edge, secured.</p>
+          </div>
+        </div>
       </section>
     </div>
-  );
+  )
 }
