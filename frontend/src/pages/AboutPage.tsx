@@ -2,41 +2,36 @@ import { motion } from 'framer-motion';
 
 export function AboutPage() {
   return (
-    <main className="min-h-screen bg-white text-slate-900">
-      <section className="container mx-auto py-16 px-4">
-        <motion.h1
-          className="font-roboto font-bold text-4xl text-blue-800 mb-6 text-center"
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7 }}
-        >
-          About TradeSecure
-        </motion.h1>
-        <motion.p
-          className="font-roboto text-lg text-slate-700 max-w-2xl mx-auto mb-8 text-center"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.7 }}
-        >
-          At TradeSecure, we believe everyone deserves a secure, transparent, and empowering trading experience. Our mission is to provide top-tier financial technology that meets the highest standards of security and regulatory compliance—so you can focus on your financial goals with peace of mind.
-        </motion.p>
-        <motion.div
-          className="flex flex-col md:flex-row items-center justify-center gap-12"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.4, duration: 0.7 }}
-        >
-          <img src="/branding/assets/logo-1.png" className="h-32 w-32 md:h-40 md:w-40" />
-          <div className="max-w-lg">
-            <h2 className="font-roboto font-bold text-xl text-blue-800 mb-2">Our Commitment</h2>
-            <ul className="list-disc list-inside text-slate-700 font-roboto">
-              <li>SEC &amp; FINRA compliant infrastructure</li>
-              <li>End-to-end encryption and advanced authentication</li>
-              <li>Continuous innovation for traders and institutions</li>
-              <li>Transparency, auditability, and trust</li>
+    <main className="w-full min-h-screen bg-white pb-16">
+      <motion.section
+        className="w-full max-w-4xl mx-auto px-4 py-20"
+        initial={{ opacity: 0, y: 40 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7 }}
+      >
+        <div className="flex flex-col md:flex-row gap-8 items-center">
+          <img src="/branding/assets/logo-1.png" className="w-28 h-28 flex-shrink-0" />
+          <div>
+            <h2 className="text-4xl font-bold font-['Roboto'] text-[#1d4ed8] mb-3">About Sentinel Compliance Suite</h2>
+            <p className="text-lg text-slate-800 font-['Roboto']">
+              At Sentinel, we believe compliance should be empowering, not exhausting. We’re your digital co-pilot—built for modern financial teams that demand accuracy, agility, and assurance. Our suite is designed by experts who know that trust, transparency, and a dash of futuristic flair make for a winning combo.
+            </p>
+            <ul className="list-disc ml-6 mt-4 text-slate-700">
+              <li>Real-time trade monitoring</li>
+              <li>Automated KYC and due diligence</li>
+              <li>Next-gen risk analytics</li>
+              <li>Comprehensive audit and reporting</li>
             </ul>
           </div>
-        </motion.div>
+        </div>
+      </motion.section>
+      <section className="w-full flex items-center justify-center bg-slate-100 py-10">
+        <div className="max-w-3xl mx-auto text-center">
+          <h3 className="text-2xl font-bold text-[#1d4ed8] mb-2">Our Mission</h3>
+          <p className="text-slate-700 text-lg">
+            To turn compliance from a checkbox into your competitive edge—delivering peace of mind so you can focus on winning the market.
+          </p>
+        </div>
       </section>
     </main>
   );
