@@ -1,105 +1,86 @@
-import { motion } from 'framer-motion';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { PriceChart } from '@/components/PriceChart';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Link } from 'react-router-dom';
-import { TrendingUp, BarChart2, RefreshCcw } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 
-const fakeMarketData = [
+const mockMarkets = [
+  {
+    symbol: 'SPY',
+    name: 'S&P 500 ETF',
+    price: 449.13,
+    change: '+0.87%',
+    chartColor: 'blue-500',
+  },
   {
     symbol: 'AAPL',
     name: 'Apple Inc.',
-    price: 187.35,
-    change: +1.43,
-    percent: +0.77,
+    price: 191.34,
+    change: '-1.12%',
+    chartColor: 'green-500',
   },
   {
-    symbol: 'GOOG',
-    name: 'Alphabet Inc.',
-    price: 2791.01,
-    change: -11.20,
-    percent: -0.40,
-  },
-  {
-    symbol: 'TSLA',
-    name: 'Tesla Inc.',
-    price: 756.99,
-    change: +8.12,
-    percent: +1.08,
-  },
-  {
-    symbol: 'MSFT',
-    name: 'Microsoft Corp.',
-    price: 321.44,
-    change: +2.09,
-    percent: +0.65,
-  },
-  {
-    symbol: 'AMZN',
-    name: 'Amazon.com Inc.',
-    price: 119.54,
-    change: -0.70,
-    percent: -0.58,
+    symbol: 'BTC-USD',
+    name: 'Bitcoin',
+    price: 59823.12,
+    change: '+2.34%',
+    chartColor: 'yellow-500',
   },
 ];
 
-export function MarketDataPage() {
+export const MarketDataPage = () => {
+  const navigate = useNavigate();
+
   return (
-    <main className="min-h-screen bg-gradient-to-b from-blue-50 to-white text-slate-900">
-      <div className="w-full bg-cover bg-center h-64 relative" style={{backgroundImage: "url('/branding/assets/hero-0.png')"}}>
-        <div className="absolute inset-0 bg-blue-900 bg-opacity-60 flex items-center justify-center">
-          <motion.h1 
-            initial={{ opacity: 0, y: 50 }} 
-            animate={{ opacity: 1, y: 0 }} 
-            transition={{ duration: 0.7 }}
-            className="font-roboto text-4xl md:text-5xl font-bold text-white text-center"
-          >
-            Real-Time Market Data
-          </motion.h1>
-        </div>
-      </div>
-      <section className="max-w-5xl mx-auto py-12 px-4">
-        <motion.div 
-          initial={{ opacity: 0, y: 30 }} 
-          animate={{ opacity: 1, y: 0 }} 
-          transition={{ duration: 0.7 }}
+    <div className="min-h-screen bg-slate-50 pb-12">
+      <header className="w-full h-48 flex flex-col justify-center items-center bg-gradient-to-r from-blue-600 to-blue-400 mb-12">
+        <motion.h1
+          className="text-white font-bold text-4xl md:text-5xl font-roboto mb-2"
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
         >
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="font-roboto font-bold text-2xl text-blue-800 flex items-center gap-2">
-              <BarChart2 className="text-blue-700" /> Live Quotes
-            </h2>
-            <Button size="sm" variant="outline" id="refresh-market-btn" className="flex items-center gap-1">
-              <RefreshCcw className="h-4 w-4" /> Refresh
-            </Button>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            {fakeMarketData.map((item) => (
-              <Card key={item.symbol} className="border-blue-100 shadow-lg hover:shadow-xl transition">
-                <CardHeader className="flex flex-row items-center justify-between pb-2">
-                  <CardTitle className="font-roboto font-bold text-lg text-blue-900">{item.symbol}</CardTitle>
-                  <TrendingUp className={`h-6 w-6 ${item.change > 0 ? 'text-green-600' : 'text-red-500'}`} />
+          Market Data
+        </motion.h1>
+        <motion.p
+          className="text-slate-100 text-lg mb-2 font-roboto"
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+        >
+          Real-time insights. Robust analytics. All in one secure place.
+        </motion.p>
+      </header>
+      <main className="max-w-6xl mx-auto px-4">
+        <div className="grid md:grid-cols-3 gap-8">
+          {mockMarkets.map((market, idx) => (
+            <motion.div
+              key={market.symbol}
+              initial={{ opacity: 0, y: 32 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 * idx }}
+            >
+              <Card className="shadow border-blue-100">
+                <CardHeader className="pb-2">
+                  <CardTitle className="flex items-center gap-2 text-lg font-roboto text-blue-900">
+                    {market.symbol}
+                    <span className="text-base font-normal text-slate-500">{market.name}</span>
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="font-roboto text-slate-600 text-base">{item.name}</div>
-                  <div className="font-roboto font-bold text-2xl mt-2 flex gap-2 items-center">
-                    ${item.price.toLocaleString()}
-                    <span className={`${item.change > 0 ? 'text-green-600' : 'text-red-500'} font-bold text-sm`}>
-                      {item.change > 0 ? '+' : ''}{item.change} ({item.percent > 0 ? '+' : ''}{item.percent}%)
-                    </span>
+                  <div className="flex items-end gap-4">
+                    <span className="text-3xl font-bold text-blue-700">${market.price.toLocaleString()}</span>
+                    <span className={`text-sm font-roboto font-medium ${market.change.startsWith('+') ? 'text-green-600' : 'text-red-500'}`}>{market.change}</span>
                   </div>
-                  <Button 
-                    asChild 
-                    size="sm" 
-                    id={`market-trade-btn-${item.symbol}`}
-                    className="mt-4 bg-blue-700 text-white w-full font-bold hover:bg-blue-800"
-                  >
-                    <Link to={`/trade-execution?symbol=${item.symbol}`}>Trade {item.symbol}</Link>
-                  </Button>
+                  <div className="my-4">
+                    <PriceChart color={market.chartColor} />
+                  </div>
+                  <Button id={`trade-${market.symbol}`} className="w-full font-bold" onClick={() => navigate('/trade-execution')}>Trade</Button>
                 </CardContent>
               </Card>
-            ))}
-          </div>
-        </motion.div>
-      </section>
-    </main>
+            </motion.div>
+          ))}
+        </div>
+      </main>
+    </div>
   );
-}
+};

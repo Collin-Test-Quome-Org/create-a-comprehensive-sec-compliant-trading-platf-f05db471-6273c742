@@ -1,125 +1,45 @@
-import {
-  NavigationMenu,
-  NavigationMenuList,
-  NavigationMenuItem,
-  NavigationMenuTrigger,
-  NavigationMenuContent,
-  NavigationMenuLink,
-  navigationMenuTriggerStyle
-} from '@/components/ui/navigation-menu';
-import { Link } from 'react-router-dom';
-import { Users, ShieldCheck, BarChart2, ArrowUpRight, LogIn, UserPlus, FileText, Settings } from 'lucide-react';
+import { NavigationMenu, NavigationMenuList, NavigationMenuItem, NavigationMenuLink } from '@/components/ui/navigation-menu';
+import { navigationMenuTriggerStyle } from '@/components/ui/navigation-menu';
+import { useNavigate } from 'react-router-dom';
+import { Menu, User, FileBarChart2, ShieldCheck, LineChart } from 'lucide-react';
+import logo from '/branding/assets/logo-0.png';
 
-export function Navigation() {
+export const Navigation = () => {
+  const navigate = useNavigate();
   return (
-    <nav className="w-full bg-white shadow z-40 border-b">
-      <div className="max-w-7xl mx-auto px-4 flex items-center h-20">
-        <NavigationMenu className="flex-1">
-          <NavigationMenuList className="gap-2 flex items-center">
+    <nav className="w-full shadow bg-white px-2 py-2 sticky top-0 z-40 border-b border-slate-100">
+      <div className="max-w-7xl mx-auto flex items-center justify-between">
+        <div className="flex items-center gap-3 cursor-pointer select-none" onClick={() => navigate('/')}>  
+          <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
+            <img src={logo} className="w-8 h-8 object-contain" />
+          </div>
+          <span className="font-roboto font-bold text-xl text-blue-900 tracking-tight">Sentinel Markets</span>
+        </div>
+        <NavigationMenu>
+          <NavigationMenuList>
             <NavigationMenuItem>
-              <NavigationMenuLink asChild className={navigationMenuTriggerStyle() + ' px-3 py-2 flex items-center font-[Roboto] text-xl font-bold'}>
-                <Link to="/">
-                  <img src="/branding/assets/logo-0.png" className="h-9 w-9 mr-2" />
-                </Link>
+              <NavigationMenuLink className={navigationMenuTriggerStyle()} onClick={() => navigate('/market-data')}>
+                <LineChart className="mr-2 h-5 w-5" />Market Data
               </NavigationMenuLink>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <NavigationMenuLink asChild className={navigationMenuTriggerStyle() + ' font-medium'}>
-                <Link to="/portfolio">Portfolio</Link>
+              <NavigationMenuLink className={navigationMenuTriggerStyle()} onClick={() => navigate('/portfolio')}>
+                <FileBarChart2 className="mr-2 h-5 w-5" />Portfolio
               </NavigationMenuLink>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <NavigationMenuTrigger className="font-medium">Trading</NavigationMenuTrigger>
-              <NavigationMenuContent>
-                <div className="p-4 grid gap-2 min-w-[220px]">
-                  <NavigationMenuLink asChild>
-                    <Link to="/market-data" className="flex items-center gap-2 hover:bg-slate-100 p-2 rounded transition">
-                      <BarChart2 className="w-4 h-4 text-blue-600" />Market Data
-                    </Link>
-                  </NavigationMenuLink>
-                  <NavigationMenuLink asChild>
-                    <Link to="/trade-execution" className="flex items-center gap-2 hover:bg-slate-100 p-2 rounded transition">
-                      <ArrowUpRight className="w-4 h-4 text-blue-600" />Trade Execution
-                    </Link>
-                  </NavigationMenuLink>
-                  <NavigationMenuLink asChild>
-                    <Link to="/order-management" className="flex items-center gap-2 hover:bg-slate-100 p-2 rounded transition">
-                      <FileText className="w-4 h-4 text-blue-600" />Order Management
-                    </Link>
-                  </NavigationMenuLink>
-                  <NavigationMenuLink asChild>
-                    <Link to="/trade-settlement" className="flex items-center gap-2 hover:bg-slate-100 p-2 rounded transition">
-                      <ShieldCheck className="w-4 h-4 text-blue-600" />Trade Settlement
-                    </Link>
-                  </NavigationMenuLink>
-                </div>
-              </NavigationMenuContent>
-            </NavigationMenuItem>
-            <NavigationMenuItem>
-              <NavigationMenuTrigger className="font-medium">Compliance</NavigationMenuTrigger>
-              <NavigationMenuContent>
-                <div className="p-4 grid gap-2 min-w-[250px]">
-                  <NavigationMenuLink asChild>
-                    <Link to="/kyc-verification" className="flex items-center gap-2 hover:bg-slate-100 p-2 rounded transition">
-                      <Users className="w-4 h-4 text-blue-600" />KYC Verification
-                    </Link>
-                  </NavigationMenuLink>
-                  <NavigationMenuLink asChild>
-                    <Link to="/compliance-monitoring" className="flex items-center gap-2 hover:bg-slate-100 p-2 rounded transition">
-                      <ShieldCheck className="w-4 h-4 text-blue-600" />Monitoring
-                    </Link>
-                  </NavigationMenuLink>
-                  <NavigationMenuLink asChild>
-                    <Link to="/regulatory-reporting" className="flex items-center gap-2 hover:bg-slate-100 p-2 rounded transition">
-                      <FileText className="w-4 h-4 text-blue-600" />Regulatory Reporting
-                    </Link>
-                  </NavigationMenuLink>
-                  <NavigationMenuLink asChild>
-                    <Link to="/audit-trail" className="flex items-center gap-2 hover:bg-slate-100 p-2 rounded transition">
-                      <Settings className="w-4 h-4 text-blue-600" />Audit Trail
-                    </Link>
-                  </NavigationMenuLink>
-                </div>
-              </NavigationMenuContent>
-            </NavigationMenuItem>
-            <NavigationMenuItem>
-              <NavigationMenuLink asChild className={navigationMenuTriggerStyle() + ' font-medium'}>
-                <Link to="/performance-analytics">Analytics</Link>
+              <NavigationMenuLink className={navigationMenuTriggerStyle()} onClick={() => navigate('/compliance-monitoring')}>
+                <ShieldCheck className="mr-2 h-5 w-5" />Compliance
               </NavigationMenuLink>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <NavigationMenuLink asChild className={navigationMenuTriggerStyle() + ' font-medium'}>
-                <Link to="/risk-assessment">Risk</Link>
+              <NavigationMenuLink className={navigationMenuTriggerStyle()} onClick={() => navigate('/account')}>
+                <User className="mr-2 h-5 w-5" />Account
               </NavigationMenuLink>
-            </NavigationMenuItem>
-            <NavigationMenuItem>
-              <NavigationMenuTrigger className="font-medium">Account</NavigationMenuTrigger>
-              <NavigationMenuContent>
-                <div className="p-4 grid gap-2 min-w-[200px]">
-                  <NavigationMenuLink asChild>
-                    <Link to="/account-overview" className="flex items-center gap-2 hover:bg-slate-100 p-2 rounded transition">
-                      <Users className="w-4 h-4 text-blue-600" />Overview
-                    </Link>
-                  </NavigationMenuLink>
-                  <NavigationMenuLink asChild>
-                    <Link to="/role-management" className="flex items-center gap-2 hover:bg-slate-100 p-2 rounded transition">
-                      <ShieldCheck className="w-4 h-4 text-blue-600" />Role Management
-                    </Link>
-                  </NavigationMenuLink>
-                </div>
-              </NavigationMenuContent>
             </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
-        <div className="flex gap-2 ml-auto">
-          <Button asChild variant="ghost" size="sm" id="login-nav" className="font-medium">
-            <Link to="/login"><LogIn className="w-5 h-5 mr-1" />Login</Link>
-          </Button>
-          <Button asChild variant="default" size="sm" id="signup-nav" className="font-medium">
-            <Link to="/signup"><UserPlus className="w-5 h-5 mr-1" />Sign Up</Link>
-          </Button>
-        </div>
       </div>
     </nav>
   );
-}
+};

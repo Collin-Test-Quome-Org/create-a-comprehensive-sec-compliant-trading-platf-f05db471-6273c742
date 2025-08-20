@@ -1,59 +1,57 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
-export function LoginPage() {
+export const LoginPage = () => {
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [form, setForm] = useState({ username: '', password: '' });
+  const navigate = useNavigate();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setForm(f => ({ ...f, [e.target.name]: e.target.value }));
-  };
-  const handleSubmit = (e: React.FormEvent) => {
+  function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
-    setError('');
     setTimeout(() => {
-      if (form.username && form.password) {
-        // Simulate successful login (would redirect in real app)
-        window.location.href = '/dashboard';
-      } else {
-        setError('Please enter both username and password.');
-        setLoading(false);
-      }
+      setLoading(false);
+      navigate('/account');
     }, 900);
-  };
+  }
+
   return (
-    <main className="min-h-screen bg-white flex items-center justify-center py-16">
-      <motion.form
-        className="w-full max-w-sm bg-slate-50 shadow rounded-xl p-8 border-t-4 border-blue-700"
-        initial={{ opacity: 0, y: 40 }}
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 to-slate-100">
+      <motion.div
+        initial={{ opacity: 0, y: 32 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7 }}
-        onSubmit={handleSubmit}
       >
-        <h1 className="font-roboto font-bold text-2xl text-blue-800 mb-8 text-center">Log in to TradeSecure</h1>
-        <div className="mb-4">
-          <Label htmlFor="username" className="font-roboto mb-1">Username</Label>
-          <Input id="username" name="username" type="text" autoComplete="username" className="font-roboto" onChange={handleChange} value={form.username} required />
-        </div>
-        <div className="mb-6">
-          <Label htmlFor="password" className="font-roboto mb-1">Password</Label>
-          <Input id="password" name="password" type="password" autoComplete="current-password" className="font-roboto" onChange={handleChange} value={form.password} required />
-        </div>
-        {error && <div className="text-red-600 font-roboto mb-3 text-sm">{error}</div>}
-        <Button id="login-submit-btn" type="submit" className="w-full bg-blue-700 text-white hover:bg-blue-800 font-roboto" disabled={loading}>
-          {loading ? 'Logging in...' : 'Log In'}
-        </Button>
-        <div className="flex justify-between mt-4">
-          <Link to="/forgot-password" className="text-blue-700 font-roboto text-sm hover:underline">Forgot password?</Link>
-          <Link to="/signup" className="text-blue-700 font-roboto text-sm hover:underline">Sign Up</Link>
-        </div>
-      </motion.form>
-    </main>
+        <Card className="w-[380px] shadow-2xl border-blue-100">
+          <CardHeader>
+            <CardTitle className="text-center text-2xl font-bold text-blue-800 font-roboto">Sign In to Sentinel Markets</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
+              <div>
+                <label htmlFor="login-email" className="block text-slate-700 mb-1 font-medium">Email Address</label>
+                <Input id="login-email" type="email" required placeholder="you@institution.com" className="font-roboto" />
+              </div>
+              <div>
+                <label htmlFor="login-password" className="block text-slate-700 mb-1 font-medium">Password</label>
+                <Input id="login-password" type="password" required placeholder="•••••••" className="font-roboto" />
+              </div>
+              <Button id="login-submit" type="submit" className="mt-2 font-bold text-lg" disabled={loading}>
+                {loading ? 'Authenticating...' : 'Sign In'}
+              </Button>
+              <p className="text-slate-500 text-sm text-center mt-2">Don’t have an account?{' '}
+                <span
+                  className="text-blue-700 hover:underline cursor-pointer"
+                  onClick={() => navigate('/signup')}
+                >Sign up</span>
+              </p>
+            </form>
+          </CardContent>
+        </Card>
+      </motion.div>
+    </div>
   );
-}
+};
