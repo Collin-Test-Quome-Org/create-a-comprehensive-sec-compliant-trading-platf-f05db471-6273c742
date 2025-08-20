@@ -1,82 +1,47 @@
-import { motion } from 'framer-motion';
-import { Button } from '@/components/ui/button';
-import { ArrowRight, ShieldCheck } from 'lucide-react';
 import { Hero } from '@/components/Hero';
-import { useNavigate } from 'react-router-dom';
+import { FeatureCards } from '@/components/FeatureCards';
+import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
-const featureList = [
-  {
-    icon: <ShieldCheck className="h-8 w-8 text-blue-600" />,
-    title: 'Secure Trading',
-    desc: 'Bank-grade security paired with real-time monitoring ensures your assets are always protected.'
-  },
-  {
-    icon: <ArrowRight className="h-8 w-8 text-blue-600" />,
-    title: 'Lightning Execution',
-    desc: 'Execute trades and manage portfolios at record speed with seamless workflows.'
-  },
-  {
-    icon: <ArrowRight className="h-8 w-8 text-blue-600" />,
-    title: 'Effortless Compliance',
-    desc: 'Automated compliance checks, audit trails, and regulatory reporting—effortlessly built-in.'
-  }
-];
-
-// Company Voice: "Sentinel Markets" (fictitious)
-// Tone: Bold, confident, tech-forward, assures trust for institutional traders/wealth managers.
-// Target: Institutional investors, compliance officers, wealth managers.
-
-export const HomePage = () => {
-  const navigate = useNavigate();
+export function HomePage() {
   return (
-    <div className="min-h-screen flex flex-col bg-white">
+    <main className="w-full min-h-screen bg-slate-50">
       <Hero />
-      <section className="py-16 px-4 max-w-6xl mx-auto w-full">
-        <motion.h2
-          className="text-3xl md:text-4xl font-bold text-blue-900 mb-8 font-roboto"
-          initial={{ opacity: 0, y: 32 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-        >
-          Welcome to Sentinel Markets
-        </motion.h2>
-        <motion.p
-          className="text-slate-700 text-lg md:text-xl mb-8 leading-relaxed max-w-3xl font-roboto"
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-        >
-          The next evolution in institutional trading, compliance, and oversight. Empowering you to trade confidently, monitor risk, and stay ahead of regulations—on one beautiful, secure platform.
-        </motion.p>
-        <div className="grid md:grid-cols-3 gap-8 my-12">
-          {featureList.map((f, i) => (
-            <motion.div
-              key={f.title}
-              className="rounded-xl bg-slate-50 shadow-md p-8 text-center flex flex-col items-center hover:shadow-xl transition-shadow"
-              initial={{ opacity: 0, y: 32 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 + i * 0.2 }}
+      <FeatureCards />
+      <section className="bg-blue-700 text-white py-12">
+        <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8 px-4">
+          <motion.div
+            initial={{ opacity: 0, x: -40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+            className="flex-1"
+          >
+            <h3
+              className="text-3xl md:text-4xl font-bold mb-2 font-['Roboto']"
+              style={{ fontFamily: 'Roboto, sans-serif', fontWeight: 700 }}
             >
-              <div className="mb-4">{f.icon}</div>
-              <h3 className="font-semibold text-lg text-blue-800 mb-2">{f.title}</h3>
-              <p className="text-slate-600 text-base">{f.desc}</p>
-            </motion.div>
-          ))}
+              Ready to unlock compliant trading?
+            </h3>
+            <p className="text-lg opacity-90 mb-4 font-['Roboto']">
+              Join the world’s most proactive traders and compliance officers. Experience the SentinelTrade difference today — because peace of mind should be your strongest asset.
+            </p>
+            <Button asChild id="cta-join-now" size="lg" className="font-semibold bg-white text-blue-700 hover:bg-slate-200 transition-colors">
+              <Link to="/signup">Join Now</Link>
+            </Button>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, x: 40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            viewport={{ once: true }}
+            className="flex-1 flex items-center justify-center"
+          >
+            <img src="/branding/assets/logo-0.png" className="w-40 h-40 object-contain select-none pointer-events-none" />
+          </motion.div>
         </div>
-        <motion.div
-          className="flex gap-4 justify-center mt-10"
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.8 }}
-        >
-          <Button id="cta-get-started" className="text-lg px-8 py-4 font-bold" onClick={() => navigate('/signup')}>
-            Get Started
-          </Button>
-          <Button id="cta-learn-more" variant="outline" className="text-lg px-8 py-4 border-blue-600 text-blue-600 font-bold hover:bg-blue-50" onClick={() => navigate('/market-data')}>
-            Explore Market Data
-          </Button>
-        </motion.div>
       </section>
-    </div>
+    </main>
   );
-};
+}
