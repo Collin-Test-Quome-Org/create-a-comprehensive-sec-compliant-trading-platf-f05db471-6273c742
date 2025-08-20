@@ -1,67 +1,63 @@
-import { ShieldCheck, TrendingUp, FileBarChart2, Users, Settings, Lock } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { motion } from 'framer-motion';
+import { ShieldCheck, LineChart, BarChart3, Lock, TrendingUp, Zap, UserCheck } from 'lucide-react';
 
 const features = [
   {
-    icon: <ShieldCheck className="w-8 h-8 text-blue-700" />,
-    title: 'Secure Trading',
-    desc: 'Bank-grade encryption, role-based access, and 24/7 monitoring keep your assets and data safe.'
+    icon: ShieldCheck,
+    title: 'SEC & FINRA Compliance',
+    desc: 'Trade with confidence. Sentinel ensures every transaction meets the strictest regulatory standards—transparency and security at every step.'
   },
   {
-    icon: <TrendingUp className="w-8 h-8 text-blue-700" />,
+    icon: LineChart,
     title: 'Real-Time Market Data',
-    desc: 'Stay ahead with blazing-fast price feeds, live analytics, and custom alerts.'
+    desc: 'Dynamic, up-to-the-millisecond market feeds, interactive price charts, and analytics that empower decisive moves.'
   },
   {
-    icon: <FileBarChart2 className="w-8 h-8 text-blue-700" />,
-    title: 'Automated Compliance',
-    desc: 'Integrated KYC, audit trails, and regulatory reporting — all streamlined and audit-ready.'
+    icon: BarChart3,
+    title: 'Portfolio Analytics',
+    desc: 'Advanced performance metrics, allocation insights, and risk dashboards make your portfolio crystal clear.'
   },
   {
-    icon: <Users className="w-8 h-8 text-blue-700" />,
-    title: 'Role Management',
-    desc: 'Granular user roles, permissions, and approval workflows for total control.'
+    icon: Lock,
+    title: 'Multi-Factor Security',
+    desc: 'Multi-layer authentication, encrypted data, and robust KYC verification keep your account locked down.'
   },
   {
-    icon: <Settings className="w-8 h-8 text-blue-700" />,
-    title: 'Customizable Workflows',
-    desc: 'Tailor dashboards, reports, and flows to fit your team’s unique needs.'
+    icon: TrendingUp,
+    title: 'Lightning Trade Engine',
+    desc: 'Ultra-fast order routing and automated settlement ensure you never miss an opportunity.'
   },
   {
-    icon: <Lock className="w-8 h-8 text-blue-700" />,
-    title: 'Privacy First',
-    desc: 'Your data stays yours. Transparent privacy. No hidden sharing. Full GDPR support.'
+    icon: Zap,
+    title: 'Automated Compliance Monitoring',
+    desc: 'Continuous risk assessment and audit trails—all monitored 24/7 for your peace of mind.'
+  },
+  {
+    icon: UserCheck,
+    title: 'Role-Based Access',
+    desc: 'Custom access levels for traders, compliance officers, and admins—right permissions, right security.'
   }
 ];
 
 export function FeatureCards() {
   return (
-    <section className="py-16 bg-white w-full">
-      <div className="max-w-6xl mx-auto px-4">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 font-['Roboto']" style={{ fontFamily: 'Roboto, sans-serif', fontWeight: 700 }}>Why SentinelTrade?</h2>
-          <p className="text-lg text-slate-700 max-w-2xl mx-auto font-['Roboto']">
-            We’re your digital compliance sherpa. Built for institutions, traders, and compliance teams who demand agility, security, and clarity.
-          </p>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {features.map((feature, i) => (
-            <Card key={feature.title} className="transition-shadow hover:shadow-2xl h-full group border-slate-200">
-              <CardHeader className="flex flex-row items-center gap-4 pb-2">
-                <div className="bg-blue-50 rounded-full p-3 group-hover:bg-blue-100 transition-colors">
-                  {feature.icon}
-                </div>
-                <CardTitle className="text-lg font-bold text-gray-900 font-['Roboto']" style={{ fontFamily: 'Roboto, sans-serif', fontWeight: 700 }}>{feature.title}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className="text-slate-600 font-['Roboto']">
-                  {feature.desc}
-                </CardDescription>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </div>
-    </section>
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-7">
+      {features.map((feature, i) => (
+        <motion.div
+          key={feature.title}
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: i * 0.12, duration: 0.6 }}
+          className="bg-white rounded-xl shadow-lg border-t-4 border-blue-700 p-7 flex flex-col gap-3"
+        >
+          <span className="bg-blue-700 text-white p-2 rounded-full w-fit mb-1">
+            {feature.icon && <feature.icon className="w-6 h-6" />}
+          </span>
+          <h3 className="font-roboto font-bold text-lg text-blue-800 mb-1">{feature.title}</h3>
+          <p className="font-roboto text-slate-700 text-base leading-relaxed">{feature.desc}</p>
+        </motion.div>
+      ))}
+    </div>
   );
 }

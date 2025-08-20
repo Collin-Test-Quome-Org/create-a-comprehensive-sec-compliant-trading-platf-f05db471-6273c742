@@ -1,83 +1,77 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { motion } from 'framer-motion';
-import { ShieldCheck, AlertTriangle } from 'lucide-react';
-
-const mockAlerts = [
-  {
-    id: 'CMP-1001',
-    type: 'KYC',
-    message: 'User ID verification pending for 2 accounts.',
-    severity: 'warning',
-    time: '2024-06-09 10:40:00',
-  },
-  {
-    id: 'CMP-1002',
-    type: 'Trade',
-    message: 'Unusual trading volume detected in TSLA.',
-    severity: 'critical',
-    time: '2024-06-09 10:45:00',
-  },
-  {
-    id: 'CMP-1003',
-    type: 'AML',
-    message: 'Potential AML rule violation flagged.',
-    severity: 'critical',
-    time: '2024-06-09 10:51:00',
-  },
-  {
-    id: 'CMP-1004',
-    type: 'Access',
-    message: 'Suspicious login attempt blocked.',
-    severity: 'warning',
-    time: '2024-06-09 10:53:00',
-  },
-];
-
-const severityColor: Record<string, string> = {
-  warning: 'bg-yellow-100 text-yellow-800',
-  critical: 'bg-red-100 text-red-700',
-};
+import { ShieldCheck, AlertTriangle, FileText } from 'lucide-react';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 
 export function ComplianceMonitoringPage() {
   return (
-    <main className="min-h-screen bg-slate-50 pb-24 pt-10">
-      <div className="max-w-5xl mx-auto">
-        <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-          <Card className="mb-8 shadow-md border-blue-100">
-            <CardHeader className="flex flex-row items-center gap-2">
-              <ShieldCheck className="text-blue-700 mr-2" />
-              <CardTitle className="font-roboto text-2xl md:text-3xl text-blue-900">Compliance Monitoring</CardTitle>
+    <div className="min-h-screen bg-white text-slate-900 px-4 py-8">
+      <motion.h1
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="font-roboto font-bold text-3xl md:text-4xl mb-8 text-blue-900 text-center"
+      >
+        Compliance Monitoring
+      </motion.h1>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.15, duration: 0.6 }}
+        >
+          <Card className="border-blue-700 border-t-4 shadow-lg">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <ShieldCheck className="text-blue-700" /> Real-time Compliance Checks
+              </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {mockAlerts.map((alert, idx) => (
-                  <motion.div
-                    key={alert.id}
-                    initial={{ opacity: 0, y: 15 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: idx * 0.07, duration: 0.35 }}
-                  >
-                    <div className={`rounded-lg shadow p-4 flex items-center gap-4 ${severityColor[alert.severity]}`}>
-                      <span>
-                        {alert.severity === 'critical' ? <AlertTriangle className="text-red-600" /> : <ShieldCheck className="text-blue-700" />}
-                      </span>
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 font-bold">
-                          <Badge className="bg-slate-200 text-blue-800">{alert.type}</Badge>
-                          <span className={`font-bold text-xs px-2 py-0.5 rounded ${severityColor[alert.severity]}`}>{alert.severity.toUpperCase()}</span>
-                        </div>
-                        <div className="font-roboto text-base mt-1">{alert.message}</div>
-                        <div className="text-xs text-slate-500 mt-1">{alert.time}</div>
-                      </div>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
+              <p className="text-slate-700 text-base font-roboto">
+                All transactions are monitored and cross-checked for regulatory compliance in real-time. Stay confident—Sentinel monitors, so you can trade.
+              </p>
+            </CardContent>
+          </Card>
+        </motion.div>
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3, duration: 0.6 }}
+        >
+          <Card className="border-blue-700 border-t-4 shadow-lg">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <AlertTriangle className="text-blue-700" /> Risk Alerts
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-slate-700 text-base font-roboto">
+                Immediate alerts for suspicious activity, market abuse, and account risks. You’re always in the loop—never in the dark.
+              </p>
+            </CardContent>
+          </Card>
+        </motion.div>
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.45, duration: 0.6 }}
+        >
+          <Card className="border-blue-700 border-t-4 shadow-lg">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <FileText className="text-blue-700" /> Regulatory Reports
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-slate-700 text-base font-roboto">
+                Access your SEC and FINRA compliance reports any time. Sentinel keeps your records organized, transparent, and always accessible.
+              </p>
             </CardContent>
           </Card>
         </motion.div>
       </div>
-    </main>
+      <div className="text-center mt-12">
+        <span className="text-blue-700 font-roboto font-semibold">For detailed compliance analytics and reporting, contact your Sentinel compliance officer.</span>
+      </div>
+    </div>
   );
 }
