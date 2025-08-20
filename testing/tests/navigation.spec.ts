@@ -1,50 +1,69 @@
+// Playwright tests for Navigation component
 import { test, expect } from '@playwright/test';
 
+const navLinks = [
+  { label: 'Market Data', path: '/market-data', id: 'navlink-marketdata' },
+  { label: 'Portfolio', path: '/portfolio', id: 'navlink-portfolio' },
+  { label: 'Order Management', path: '/order-management', id: 'navlink-ordermanagement' },
+  { label: 'Compliance', path: '/compliance-monitoring', id: 'navlink-compliance' },
+  { label: 'Analytics', path: '/performance-analytics', id: 'navlink-analytics' },
+  { label: 'Audit Trail', path: '/audit-trail', id: 'navlink-audittrail' }
+];
+
+const authLinks = [
+  { label: 'Login', path: '/login', id: 'navlink-login' },
+  { label: 'Sign Up', path: '/signup', id: 'navlink-sign up' }
+];
+
 test.describe('Navigation Bar', () => {
-  test.beforeEach(async ({ page }) => {
+  test('renders logo and brand name', async ({ page }) => {
     await page.goto('/');
-  });
-
-  test('renders navigation menu items', async ({ page }) => {
-    // Home link (logo)
-    const logo = page.locator('nav img[src="/branding/assets/logo-0.png"]');
+    const logo = page.locator('img[src="/branding/assets/logo-0.png"]');
     await expect(logo).toBeVisible();
-    // Home link (text)
-    await expect(page.getByRole('link', { name: 'Home' })).toBeVisible();
-    await expect(page.getByRole('link', { name: 'Features' })).toBeVisible();
-    await expect(page.getByRole('link', { name: 'Pricing' })).toBeVisible();
-    await expect(page.getByRole('link', { name: 'About' })).toBeVisible();
-    // Auth buttons
-    await expect(page.getByRole('button', { name: 'Log In' })).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Sign Up' })).toBeVisible();
+    const brandName = page.locator('text=TradeGuard');
+    await expect(brandName).toBeVisible();
   });
 
-  test('navigation links route correctly', async ({ page }) => {
-    // Click Home (text)
-    await page.getByRole('link', { name: 'Home' }).click();
+  test('renders all navigation links (desktop)', async ({ page }) => {
+    await page.setViewportSize({ width: 1200, height: 800 });
+    await page.goto('/');
+    for (const link of navLinks) {
+      const navLink = page.locator(`#${link.id}`);
+      await expect(navLink).toBeVisible();
+      await expect(navLink).toHaveText(link.label);
+    }
+    for (const link of authLinks) {
+      const authLink = page.locator(`#navlink-${link.label.toLowerCase()}`);
+      await expect(authLink).toBeVisible();
+      await expect(authLink).toHaveText(link.label);
+    }
+  });
+
+  test('navigation links highlight when active', async ({ page }) => {
+    await page.setViewportSize({ width: 1200, height: 800 });
+    for (const link of navLinks) {
+      await page.goto(link.path);
+      const navLink = page.locator(`#${link.id}`);
+      await expect(navLink).toHaveClass(/bg-blue-100/);
+      await expect(navLink).toHaveClass(/text-\[#1d4ed8\]/);
+    }
+    for (const link of authLinks) {
+      await page.goto(link.path);
+      const authLink = page.locator(`#navlink-${link.label.toLowerCase()}`);
+      await expect(authLink).toHaveClass(/bg-blue-100/);
+    }
+  });
+
+  test('logo link navigates to home', async ({ page }) => {
+    await page.goto('/portfolio');
+    await page.click('img[src="/branding/assets/logo-0.png"]');
     await expect(page).toHaveURL('/');
-    // Features
-    await page.getByRole('link', { name: 'Features' }).click();
-    await expect(page).toHaveURL('/features');
-    // Pricing
-    await page.getByRole('link', { name: 'Pricing' }).click();
-    await expect(page).toHaveURL('/pricing');
-    // About
-    await page.getByRole('link', { name: 'About' }).click();
-    await expect(page).toHaveURL('/about');
-    // Log In
-    await page.getByRole('button', { name: 'Log In' }).click();
-    await expect(page).toHaveURL('/login');
-    // Sign Up
-    await page.getByRole('button', { name: 'Sign Up' }).click();
-    await expect(page).toHaveURL('/signup');
   });
 
-  test('navigation bar is accessible', async ({ page }) => {
-    // Navbar landmark
-    const nav = page.locator('nav');
-    await expect(nav).toBeVisible();
-    // Role navigation
-    await expect(nav).toHaveAttribute('class', /border-b/);
+  test('brand name is not visible on mobile', async ({ page }) => {
+    await page.setViewportSize({ width: 375, height: 800 });
+    await page.goto('/');
+    const brandName = page.locator('text=TradeGuard');
+    await expect(brandName).toBeHidden();
   });
 });
