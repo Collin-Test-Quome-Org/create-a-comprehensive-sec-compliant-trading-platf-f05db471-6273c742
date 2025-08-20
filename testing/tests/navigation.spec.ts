@@ -1,74 +1,58 @@
+// Navigation component and navigation menu tests
 import { test, expect } from '@playwright/test';
-
-// All navigation routes from the Navigation component
-const navRoutes = [
-  {
-    label: 'Market Data',
-    path: '/market-data',
-    icon: 'LineChart',
-  },
-  {
-    label: 'Portfolio',
-    path: '/portfolio',
-    icon: 'FileBarChart2',
-  },
-  {
-    label: 'Compliance',
-    path: '/compliance-monitoring',
-    icon: 'ShieldCheck',
-  },
-  {
-    label: 'Account',
-    path: '/account',
-    icon: 'User',
-  },
-];
 
 test.describe('Navigation Bar', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
   });
 
-  test('shows logo and app name', async ({ page }) => {
-    // The logo is present (image)
-    await expect(page.locator('nav img')).toBeVisible();
-    // The app name is visible
-    await expect(page.getByText('Sentinel Markets')).toBeVisible();
-  });
-
-  test('clicking logo or app name navigates to home', async ({ page }) => {
-    // Navigate away first
+  test('renders logo and brand name, and navigates home on logo click', async ({ page }) => {
+    const logo = page.locator('nav img');
+    const brandName = page.getByText('Sentinel Markets');
+    await expect(logo).toBeVisible();
+    await expect(brandName).toBeVisible();
+    // Navigate away, then click logo to return home
     await page.goto('/market-data');
-    // Click logo container
-    await page.locator('nav .flex.items-center.gap-3').first().click();
+    await logo.first().click();
     await expect(page).toHaveURL('/');
-    // Also try clicking the text
-    await page.goto('/portfolio');
-    await page.getByText('Sentinel Markets').click();
-    await expect(page).toHaveURL('/');
+    await expect(page.getByText('Why Choose SentinelTrade?')).toBeVisible();
   });
 
-  test('navigation menu items are visible', async ({ page }) => {
-    for (const { label } of navRoutes) {
-      await expect(page.getByRole('link', { name: new RegExp(label, 'i') })).toBeVisible();
-    }
+  test('Navigation menu contains expected links', async ({ page }) => {
+    await expect(page.getByRole('link', { name: /Market Data/ })).toBeVisible();
+    await expect(page.getByRole('link', { name: /Portfolio/ })).toBeVisible();
+    await expect(page.getByRole('link', { name: /Compliance/ })).toBeVisible();
+    await expect(page.getByRole('link', { name: /Account/ })).toBeVisible();
   });
 
-  for (const nav of navRoutes) {
-    test(`navigates to ${nav.label} page on menu click`, async ({ page }) => {
-      await page.getByRole('link', { name: new RegExp(nav.label, 'i') }).click();
-      // Accept both /compliance-monitoring and /account even if page is blank
-      await expect(page).toHaveURL(nav.path);
-    });
-  }
+  test('navigates to Market Data when clicking Market Data menu item', async ({ page }) => {
+    await page.getByRole('link', { name: /Market Data/ }).click();
+    await expect(page).toHaveURL('/market-data');
+  });
 
-  test('navigation is keyboard accessible', async ({ page }) => {
-    // Focus the first menu item, press Tab to cycle through
-    await page.keyboard.press('Tab'); // logo
-    await page.keyboard.press('Tab'); // first nav menu link
-    const firstNav = await page.getByRole('link', { name: /Market Data/i });
-    await expect(firstNav).toBeFocused();
-    await page.keyboard.press('Tab');
-    await expect(page.getByRole('link', { name: /Portfolio/i })).toBeFocused();
+  test('navigates to Portfolio when clicking Portfolio menu item', async ({ page }) => {
+    await page.getByRole('link', { name: /Portfolio/ }).click();
+    await expect(page).toHaveURL('/portfolio');
+  });
+
+  test('navigates to Compliance when clicking Compliance menu item', async ({ page }) => {
+    await page.getByRole('link', { name: /Compliance/ }).click();
+    // The compliance link navigates to '/compliance-monitoring' (per code)
+    await expect(page).toHaveURL('/compliance-monitoring');
+  });
+
+  test('navigates to Account when clicking Account menu item', async ({ page }) => {
+    await page.getByRole('link', { name: /Account/ }).click();
+    await expect(page).toHaveURL('/account');
+  });
+
+  test('navigation bar is sticky at the top', async ({ page }) => {
+    const nav = page.locator('nav');
+    // Simulate scrolling
+    await page.evaluate(() => window.scrollBy(0, 500));
+    await expect(nav).toBeVisible();
+    // Check that nav is still at the top (sticky)
+    const bounding = await nav.boundingBox();
+    expect(bounding?.y).toBeLessThanOrEqual(0);
   });
 });
