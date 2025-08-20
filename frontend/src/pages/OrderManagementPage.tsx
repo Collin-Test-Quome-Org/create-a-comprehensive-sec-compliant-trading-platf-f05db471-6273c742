@@ -1,75 +1,90 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 
 const mockOrders = [
-  { id: 1, symbol: 'AAPL', side: 'Buy', qty: 10, price: 198.12, status: 'Filled', time: '09:32:10' },
-  { id: 2, symbol: 'TSLA', side: 'Sell', qty: 5, price: 241.75, status: 'Pending', time: '09:41:52' },
-  { id: 3, symbol: 'MSFT', side: 'Buy', qty: 4, price: 337.22, status: 'Cancelled', time: '09:49:33' },
+  { id: 'ORD-001', symbol: 'AAPL', type: 'Buy', qty: 20, price: 192.10, status: 'Filled' },
+  { id: 'ORD-002', symbol: 'TSLA', type: 'Sell', qty: 5, price: 1023.00, status: 'Pending' },
+  { id: 'ORD-003', symbol: 'AMZN', type: 'Buy', qty: 3, price: 3490.10, status: 'Cancelled' },
 ];
 
 export function OrderManagementPage() {
   const [orders, setOrders] = useState(mockOrders);
 
-  const handleCancel = (id: number) => {
-    setOrders(prev => prev.map(o => o.id === id ? { ...o, status: 'Cancelled' } : o));
+  const handleCancel = (orderId: string) => {
+    setOrders((os) => os.map(o => o.id === orderId ? { ...o, status: 'Cancelled' } : o));
   };
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-white via-blue-50 to-blue-100 pb-12">
-      <div className="w-full relative bg-cover bg-center h-56 mb-8"
-        style={{ backgroundImage: "url('/branding/assets/hero-0.png')" }}>
-        <div className="bg-black bg-opacity-60 h-full flex items-center justify-center">
-          <motion.h1 initial={{opacity:0, y: 50}} animate={{opacity:1, y:0}} transition={{duration:0.7, delay:0.1}}
-            className="text-white text-3xl md:text-5xl font-roboto font-bold">
-            Order Management
-          </motion.h1>
-        </div>
-      </div>
-      <section className="max-w-4xl mx-auto px-4">
-        <motion.div initial={{opacity:0, y:30}} animate={{opacity:1, y:0}} transition={{duration:0.6}}>
-          <Card className="shadow-xl mb-8">
-            <CardHeader>
-              <CardTitle className="font-roboto text-blue-800 text-2xl">Recent Orders</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <table className="w-full text-slate-900 font-roboto">
+    <main className="bg-slate-50 min-h-screen py-10">
+      <div className="max-w-4xl mx-auto px-4">
+        <motion.h1
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="font-roboto font-bold text-3xl md:text-4xl text-blue-800 mb-8 text-center"
+        >
+          Order Management
+        </motion.h1>
+        <Card className="shadow mb-6">
+          <CardHeader>
+            <CardTitle className="text-xl font-bold text-slate-800">Recent Orders</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="overflow-x-auto">
+              <table className="min-w-full border rounded">
                 <thead>
-                  <tr className="border-b">
-                    <th className="py-2 text-left">Time</th>
-                    <th className="py-2 text-left">Symbol</th>
-                    <th className="py-2 text-left">Side</th>
-                    <th className="py-2 text-right">Qty</th>
-                    <th className="py-2 text-right">Price</th>
-                    <th className="py-2 text-center">Status</th>
-                    <th></th>
+                  <tr className="bg-blue-100 text-blue-900">
+                    <th className="p-2 text-left font-bold">Order ID</th>
+                    <th className="p-2 text-left font-bold">Symbol</th>
+                    <th className="p-2 text-left font-bold">Type</th>
+                    <th className="p-2 text-left font-bold">Qty</th>
+                    <th className="p-2 text-left font-bold">Price</th>
+                    <th className="p-2 text-left font-bold">Status</th>
+                    <th className="p-2 text-left font-bold">Action</th>
                   </tr>
                 </thead>
                 <tbody>
                   {orders.map(order => (
-                    <tr key={order.id} className="border-b hover:bg-blue-50 transition">
-                      <td className="py-3">{order.time}</td>
-                      <td className="font-bold text-blue-700">{order.symbol}</td>
-                      <td className={order.side === 'Buy' ? 'text-green-700' : 'text-red-700'}>{order.side}</td>
-                      <td className="text-right">{order.qty}</td>
-                      <td className="text-right">${order.price.toFixed(2)}</td>
-                      <td className={`text-center font-semibold ${order.status === 'Filled' ? 'text-green-600' : order.status === 'Pending' ? 'text-yellow-600' : 'text-red-600'}`}>{order.status}</td>
-                      <td className="text-right">
-                        {order.status === 'Pending' && (
-                          <Button id={`cancel-order-${order.id}`} size="sm" className="bg-red-600 hover:bg-red-700 text-white" onClick={() => handleCancel(order.id)}>
+                    <tr key={order.id} className="border-b">
+                      <td className="p-2 text-slate-800 font-mono">{order.id}</td>
+                      <td className="p-2 font-bold text-[#1d4ed8]">{order.symbol}</td>
+                      <td className="p-2">{order.type}</td>
+                      <td className="p-2">{order.qty}</td>
+                      <td className="p-2">${order.price.toFixed(2)}</td>
+                      <td className="p-2 font-bold">
+                        {order.status === 'Filled' && <span className="text-green-700">Filled</span>}
+                        {order.status === 'Pending' && <span className="text-yellow-700">Pending</span>}
+                        {order.status === 'Cancelled' && <span className="text-red-600">Cancelled</span>}
+                      </td>
+                      <td className="p-2">
+                        {order.status === 'Pending' ? (
+                          <Button
+                            id={`cancel-order-${order.id}`}
+                            size="sm"
+                            className="bg-red-500 text-white hover:bg-red-700"
+                            onClick={() => handleCancel(order.id)}
+                          >
                             Cancel
                           </Button>
+                        ) : (
+                          <span className="text-slate-400 text-xs">—</span>
                         )}
                       </td>
                     </tr>
                   ))}
+                  {orders.length === 0 && (
+                    <tr>
+                      <td colSpan={7} className="text-center text-slate-400 py-6">No orders.</td>
+                    </tr>
+                  )}
                 </tbody>
               </table>
-            </CardContent>
-          </Card>
-        </motion.div>
-      </section>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     </main>
   );
 }
