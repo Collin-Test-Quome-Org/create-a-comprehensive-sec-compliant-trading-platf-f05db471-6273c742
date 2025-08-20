@@ -1,4 +1,3 @@
-// tests for LandingPage (homepage)
 import { test, expect } from '@playwright/test';
 
 test.describe('Landing Page', () => {
@@ -6,42 +5,40 @@ test.describe('Landing Page', () => {
     await page.goto('/');
   });
 
-  test('renders Hero section and main call-to-action', async ({ page }) => {
-    // Section heading
+  test('displays hero section and main headline', async ({ page }) => {
+    // The Hero component (just check the main section is present)
+    await expect(page.locator('main')).toBeVisible();
+    // Headline
     await expect(page.getByRole('heading', { name: 'Why Choose SentinelTrade?' })).toBeVisible();
-    // All three feature cards
-    await expect(page.getByRole('heading', { name: 'Unmatched Security' })).toBeVisible();
-    await expect(page.getByRole('heading', { name: 'Real-Time Insights' })).toBeVisible();
-    await expect(page.getByRole('heading', { name: 'Lightning Execution' })).toBeVisible();
-    // Feature card texts
-    await expect(page.getByText(/bank-grade encryption/i)).toBeVisible();
-    await expect(page.getByText(/live market data/i)).toBeVisible();
-    await expect(page.getByText(/ultra-fast trade engine/i)).toBeVisible();
-    // CTA button
-    await expect(page.locator('#start-trading-btn')).toBeVisible();
-    await expect(page.locator('#start-trading-btn')).toHaveText(/Start Trading Now/i);
   });
 
-  test('Start Trading Now button navigates to /signup', async ({ page }) => {
-    await page.locator('#start-trading-btn').click();
-    await expect(page).toHaveURL('/signup');
+  test('renders all feature cards with correct titles and descriptions', async ({ page }) => {
+    // There are 3 feature cards in a grid
+    const cards = page.locator('section .grid > div');
+    await expect(cards).toHaveCount(3);
+    await expect(cards.nth(0)).toContainText('Unmatched Security');
+    await expect(cards.nth(0)).toContainText('bank-grade encryption');
+    await expect(cards.nth(1)).toContainText('Real-Time Insights');
+    await expect(cards.nth(1)).toContainText('live market data');
+    await expect(cards.nth(2)).toContainText('Lightning Execution');
+    await expect(cards.nth(2)).toContainText('ultra-fast trade engine');
   });
 
-  test('feature cards use correct icons and styles', async ({ page }) => {
-    // Each card has a blue background icon (SVG inside span.bg-blue-700)
-    const iconSpans = page.locator('span.bg-blue-700');
-    await expect(iconSpans).toHaveCount(3);
-    for (let i = 0; i < 3; i++) {
-      await expect(iconSpans.nth(i).locator('svg')).toBeVisible();
-    }
+  test('renders feature SVG icons in each card', async ({ page }) => {
+    const cardSvgs = page.locator('section .grid > div svg');
+    await expect(cardSvgs).toHaveCount(3);
   });
 
-  test('Landing page main sections are accessible', async ({ page }) => {
-    // Main landmark
-    await expect(page.getByRole('main')).toBeVisible();
-    // Section with heading
+  test('renders and navigates with the "Start Trading Now" button', async ({ page }) => {
+    const startBtn = page.locator('#start-trading-btn');
+    await expect(startBtn).toBeVisible();
+    await expect(startBtn).toContainText('Start Trading Now');
+    await startBtn.click();
+    await expect(page).toHaveURL(/\/signup$/);
+  });
+
+  test('basic accessibility: all headings and buttons have correct roles', async ({ page }) => {
     await expect(page.getByRole('heading', { name: 'Why Choose SentinelTrade?' })).toBeVisible();
-    // CTA button is a link
-    await expect(page.locator('#start-trading-btn')).toHaveAttribute('type', /button|submit/);
+    await expect(page.getByRole('button', { name: /Start Trading Now/i })).toBeVisible();
   });
 });

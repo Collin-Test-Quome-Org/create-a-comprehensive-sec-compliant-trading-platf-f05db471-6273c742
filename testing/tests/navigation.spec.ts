@@ -1,74 +1,81 @@
-// tests for Navigation component and top navigation bar
 import { test, expect } from '@playwright/test';
 
-const navLinks = [
-  { id: 'nav-market-data', text: 'Market Data', path: '/market-data' },
-  { id: 'nav-portfolio', text: 'Portfolio', path: '/portfolio' },
-  { id: 'nav-trade-execution', text: 'Trade', path: '/trade-execution' },
-  { id: 'nav-compliance', text: 'Compliance', path: '/compliance-monitoring' },
-  { id: 'nav-account', text: 'Account', path: '/account' },
-];
+// Navigation Bar Tests
 
 test.describe('Navigation Bar', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
   });
 
-  test('shows logo and all navigation links', async ({ page }) => {
-    // Logo should be present
-    const logo = page.locator('img[src="/branding/assets/logo-0.png"]');
+  test('renders all navigation links and buttons', async ({ page }) => {
+    // Logo
+    const logo = page.locator('nav img[src="/branding/assets/logo-0.png"]');
     await expect(logo).toBeVisible();
-    // All nav links
-    for (const link of navLinks) {
-      const nav = page.getByRole('link').filter({ hasText: link.text });
-      await expect(nav).toBeVisible();
-    }
+
+    // Navigation links by their IDs
+    await expect(page.getByRole('link', { name: 'Market Data' })).toBeVisible();
+    await expect(page.locator('#nav-market-data')).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Portfolio' })).toBeVisible();
+    await expect(page.locator('#nav-portfolio')).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Trade' })).toBeVisible();
+    await expect(page.locator('#nav-trade-execution')).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Compliance' })).toBeVisible();
+    await expect(page.locator('#nav-compliance')).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Account' })).toBeVisible();
+    await expect(page.locator('#nav-account')).toBeVisible();
+
     // Login and Sign Up buttons
     await expect(page.locator('#nav-login-btn')).toBeVisible();
     await expect(page.locator('#nav-signup-btn')).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Login' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Sign Up' })).toBeVisible();
   });
 
-  for (const link of navLinks) {
-    test(`navigates to ${link.text} when clicking nav link`, async ({ page }) => {
-      const nav = page.locator(`#${link.id}`);
-      await nav.click();
-      // Expect URL to change
-      await expect(page).toHaveURL(link.path);
-    });
-  }
-
-  test('clicking logo navigates to home page', async ({ page }) => {
-    await page.locator('img[src="/branding/assets/logo-0.png"]').click();
+  test('navigates to correct pages on nav link click', async ({ page }) => {
+    // Market Data
+    await page.click('#nav-market-data');
+    await expect(page).toHaveURL(/\/market-data$/);
+    // Portfolio
+    await page.click('nav'); // Ensure nav is focused
+    await page.click('#nav-portfolio');
+    await expect(page).toHaveURL(/\/portfolio$/);
+    // Trade (should go to /trade-execution)
+    await page.click('nav');
+    await page.click('#nav-trade-execution');
+    await expect(page).toHaveURL(/\/trade-execution$/);
+    // Compliance
+    await page.click('nav');
+    await page.click('#nav-compliance');
+    await expect(page).toHaveURL(/\/compliance-monitoring$/);
+    // Account
+    await page.click('nav');
+    await page.click('#nav-account');
+    await expect(page).toHaveURL(/\/account$/);
+    // Logo (home)
+    await page.click('nav img[src="/branding/assets/logo-0.png"]');
     await expect(page).toHaveURL('/');
   });
 
-  test('Login button navigates to /login', async ({ page }) => {
-    await page.locator('#nav-login-btn').click();
-    await expect(page).toHaveURL('/login');
+  test('login and sign up buttons navigate to correct pages', async ({ page }) => {
+    await page.click('#nav-login-btn');
+    await expect(page).toHaveURL(/\/login$/);
+    await page.goto('/');
+    await page.click('#nav-signup-btn');
+    await expect(page).toHaveURL(/\/signup$/);
   });
 
-  test('Sign Up button navigates to /signup', async ({ page }) => {
-    await page.locator('#nav-signup-btn').click();
-    await expect(page).toHaveURL('/signup');
-  });
-
-  test('Navigation bar is accessible by role navigation', async ({ page }) => {
-    const nav = page.getByRole('navigation');
-    await expect(nav).toBeVisible();
-  });
-
-  test('Navigation links have appropriate roles and are keyboard accessible', async ({ page }) => {
-    // Tab to first nav link
-    await page.keyboard.press('Tab'); // logo link
-    await expect(page.locator('img[src="/branding/assets/logo-0.png"]').first()).toBeFocused();
-    for (const link of navLinks) {
+  test('navigation is accessible by keyboard', async ({ page }) => {
+    // Tab through nav links and expect focus to be visible
+    await page.keyboard.press('Tab'); // Logo link
+    await expect(page.locator('nav a').first()).toBeFocused();
+    for (const id of ['#nav-market-data', '#nav-portfolio', '#nav-trade-execution', '#nav-compliance', '#nav-account']) {
       await page.keyboard.press('Tab');
-      const nav = page.locator(`#${link.id}`);
-      await expect(nav).toBeFocused();
+      await expect(page.locator(id)).toBeFocused();
     }
-    await page.keyboard.press('Tab'); // Login
+    // Login and signup buttons
+    await page.keyboard.press('Tab');
     await expect(page.locator('#nav-login-btn')).toBeFocused();
-    await page.keyboard.press('Tab'); // Sign Up
+    await page.keyboard.press('Tab');
     await expect(page.locator('#nav-signup-btn')).toBeFocused();
   });
 });
