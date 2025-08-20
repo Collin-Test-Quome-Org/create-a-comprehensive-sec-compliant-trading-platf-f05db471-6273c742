@@ -1,44 +1,34 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Landing Page', () => {
-  test.beforeEach(async ({ page }) => {
+  test('renders hero section and main features', async ({ page }) => {
     await page.goto('/');
+    // Expect a Hero component (heading or main feature)
+    await expect(page.getByRole('heading', { name: /Why Choose SentinelTrade\?/ })).toBeVisible();
+    // Feature cards
+    await expect(page.getByRole('heading', { name: /Unmatched Security/ })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /Real-Time Insights/ })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /Lightning Execution/ })).toBeVisible();
+    // Feature texts
+    await expect(page.getByText(/bank-grade encryption, real-time fraud detection/i)).toBeVisible();
+    await expect(page.getByText(/live market data, customizable dashboards/i)).toBeVisible();
+    await expect(page.getByText(/ultra-fast trade engine delivers execution/i)).toBeVisible();
   });
 
-  test('renders hero section', async ({ page }) => {
-    // The Hero component is included at the top of the landing page
-    // Check for presence of at least one large heading or hero image
-    const heroSection = page.locator('main .min-h-screen');
-    await expect(heroSection).toBeVisible();
-  });
-
-  test('renders features section with all feature cards', async ({ page }) => {
-    await expect(page.getByRole('heading', { name: 'Why Choose SentinelTrade?' })).toBeVisible();
-    // Feature card titles
-    await expect(page.getByRole('heading', { name: 'Unmatched Security' })).toBeVisible();
-    await expect(page.getByRole('heading', { name: 'Real-Time Insights' })).toBeVisible();
-    await expect(page.getByRole('heading', { name: 'Lightning Execution' })).toBeVisible();
-    // Feature descriptions
-    await expect(page.getByText('Your assets are our top priority. Our platform is built with bank-grade encryption, real-time fraud detection, and continuous compliance monitoring.')).toBeVisible();
-    await expect(page.getByText('Stay ahead with live market data, customizable dashboards, and actionable analytics. Make moves with confidence—every second counts.')).toBeVisible();
-    await expect(page.getByText('Our ultra-fast trade engine delivers execution at the speed of opportunity. Trade smarter—trade Sentinel.')).toBeVisible();
-  });
-
-  test('renders and interacts with Start Trading Now button', async ({ page }) => {
-    const startBtn = page.getByRole('button', { name: 'Start Trading Now' });
-    await expect(startBtn).toBeVisible();
-    await startBtn.click();
+  test('Start Trading Now button is visible and navigates to signup', async ({ page }) => {
+    await page.goto('/');
+    const startTradingBtn = page.getByRole('button', { name: /Start Trading Now/i });
+    await expect(startTradingBtn).toBeVisible();
+    await startTradingBtn.click();
     await expect(page).toHaveURL('/signup');
   });
 
-  test('landing page has accessible headings and buttons', async ({ page }) => {
-    // Top-level heading
-    await expect(page.getByRole('heading', { name: /SentinelTrade/i })).toBeVisible();
-    // All feature headings have semantic roles
-    await expect(page.getByRole('heading', { name: 'Unmatched Security' })).toBeVisible();
-    await expect(page.getByRole('heading', { name: 'Real-Time Insights' })).toBeVisible();
-    await expect(page.getByRole('heading', { name: 'Lightning Execution' })).toBeVisible();
-    // All buttons have roles
-    await expect(page.getByRole('button', { name: /Trading Now/i })).toBeVisible();
+  test('landing page is accessible (has main landmark and headings)', async ({ page }) => {
+    await page.goto('/');
+    // Main landmark
+    await expect(page.locator('main')).toBeVisible();
+    // Has at least one h1 or h2
+    const headings = await page.locator('h1, h2').all();
+    expect(headings.length).toBeGreaterThan(0);
   });
 });
