@@ -1,14 +1,17 @@
-import {TooltipProvider} from '@/components/ui/tooltip'
-import { PropsWithChildren } from 'react'
-import { ThemeProvider } from './components/theme-provider'
+import { TooltipProvider } from '@/components/ui/tooltip';
+import { PropsWithChildren } from 'react';
+import { ThemeProvider } from './components/theme-provider';
+import { AuthProvider } from '@/context/AuthContext';
 
 /**
  * Wraps app with various React Context Providers. Used in main.tsx
  */
-export const Providers = ({children}: PropsWithChildren) => (
+export const Providers = ({ children }: PropsWithChildren) => (
   <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
     <TooltipProvider>
-      {children}
+      <AuthProvider>
+        {children}
+      </AuthProvider>
     </TooltipProvider>
   </ThemeProvider>
-)
+);
