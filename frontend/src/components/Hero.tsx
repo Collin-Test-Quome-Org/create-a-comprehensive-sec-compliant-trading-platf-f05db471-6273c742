@@ -4,35 +4,38 @@ import { Link } from 'react-router-dom';
 
 export function Hero() {
   return (
-    <section className="relative w-full">
-      <div
-        style={{ backgroundImage: "url('/branding/assets/hero-0.png')" }}
-        className="bg-cover bg-center h-[32rem] md:h-[36rem] lg:h-[40rem] w-full"
+    <section
+      className="relative w-full h-[440px] md:h-[540px] flex items-center justify-center bg-blue-700 overflow-hidden"
+      style={{ backgroundImage: "url('/branding/assets/hero-0.png')", backgroundSize: 'cover', backgroundPosition: 'center' }}
+    >
+      <div className="absolute inset-0 bg-black bg-opacity-50" />
+      <motion.div
+        className="relative z-10 flex flex-col items-center justify-center w-full px-4 text-center"
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1 }}
       >
-        <div className="bg-black/60 h-full flex flex-col items-center justify-center text-center px-6">
-          <motion.div
-            initial={{ y: 60, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.8, type: 'spring' }}
-            className="pt-10 md:pt-20 lg:pt-32"
-          >
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-roboto font-bold text-white drop-shadow mb-4">
-              Power Up Your Portfolio<br />With Secure, Real-Time Trading
-            </h1>
-            <p className="max-w-xl mx-auto text-lg md:text-xl font-roboto text-slate-200 mb-8">
-              Welcome to SentinelTrade, your trusted partner in intelligent investing. Monitor markets, act instantly, and trade with confidence.
-            </p>
-            <div className="flex justify-center gap-4">
-              <Button asChild size="lg" id="get-started-btn" className="bg-blue-700 text-white font-bold text-lg px-7 py-4 hover:bg-blue-800 shadow-lg">
-                <Link to="/signup">Get Started</Link>
-              </Button>
-              <Button asChild size="lg" variant="secondary" id="learn-more-btn" className="bg-white/80 text-blue-700 font-bold text-lg px-7 py-4 border-2 border-blue-700 hover:bg-white/100">
-                <Link to="/features">Learn More</Link>
-              </Button>
-            </div>
-          </motion.div>
-        </div>
-      </div>
+        <img src="/branding/assets/logo-0.png" className="h-20 w-20 mb-4 mx-auto" />
+        <motion.h1
+          className="font-roboto font-bold text-4xl md:text-6xl text-white drop-shadow mb-4"
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.15, duration: 0.8 }}
+        >
+          TradeSecure: Empower Your Financial Future
+        </motion.h1>
+        <motion.p
+          className="font-roboto text-lg md:text-2xl text-slate-100 max-w-2xl mb-8"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3, duration: 0.7 }}
+        >
+          SEC-compliant, lightning-fast trading with real-time insights, advanced portfolio tools, and uncompromising security for investors and professionals.
+        </motion.p>
+        <Button asChild size="lg" id="get-started-btn" className="bg-white text-blue-700 font-bold text-lg px-8 py-5 hover:bg-blue-50 shadow-lg">
+          <Link to="/signup">Get Started</Link>
+        </Button>
+      </motion.div>
     </section>
   );
 }
