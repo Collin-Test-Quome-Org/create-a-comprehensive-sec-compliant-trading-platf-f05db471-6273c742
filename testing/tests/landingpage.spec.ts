@@ -1,68 +1,51 @@
 import { test, expect } from '@playwright/test';
 
-test.describe('Landing Page', () => {
+test.describe('Landing Page Content', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
   });
 
-  test('renders hero section', async ({ page }) => {
-    // Hero may have heading, button, etc
-    // Check presence of heading in Hero (not from features)
-    const heroHeading = page.locator('main h1');
-    await expect(heroHeading.first()).toBeVisible();
+  test('shows the Hero section (brand presence)', async ({ page }) => {
+    // The Hero component is assumed to be present at the top of the landing page
+    // We'll check for the main headline, which may be in Hero
+    // If there is a unique heading in the Hero, adjust this selector accordingly
+    const heroHeading = page.getByRole('heading', { level: 1 });
+    await expect(heroHeading).toBeVisible();
   });
 
-  test('renders Why Choose SentinelTrade section and its features', async ({ page }) => {
-    const sectionHeading = page.locator('h2', { hasText: 'Why Choose SentinelTrade?' });
-    await expect(sectionHeading).toBeVisible();
-    // There are 3 feature cards
-    const features = [
-      'Unmatched Security',
-      'Real-Time Insights',
-      'Lightning Execution'
-    ];
-    for (const feature of features) {
-      const cardHeading = page.locator('h3', { hasText: feature });
-      await expect(cardHeading).toBeVisible();
-      // Each card should have a paragraph
-      const cardParent = cardHeading.locator('..');
-      const paragraph = cardParent.locator('p');
-      await expect(paragraph).toBeVisible();
-    }
+  test('shows "Why Choose SentinelTrade?" section headline', async ({ page }) => {
+    await expect(page.getByRole('heading', { name: /Why Choose SentinelTrade\?/ })).toBeVisible();
   });
 
-  test('Start Trading Now button links to /signup', async ({ page }) => {
-    const button = page.locator('#start-trading-btn');
-    await expect(button).toBeVisible();
-    const link = button.locator('a');
-    await expect(link).toHaveAttribute('href', '/signup');
-    // Clicking navigates to signup
-    await link.click();
+  test('shows three feature cards with correct headings', async ({ page }) => {
+    await expect(page.getByRole('heading', { name: 'Unmatched Security' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Real-Time Insights' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Lightning Execution' })).toBeVisible();
+    // There should be three feature cards
+    const cardHeadings = page.locator('h3.font-bold');
+    await expect(cardHeadings).toHaveCount(3);
+  });
+
+  test('each feature card contains correct description', async ({ page }) => {
+    await expect(page.getByText(/bank-grade encryption, real-time fraud detection, and continuous compliance monitoring/i)).toBeVisible();
+    await expect(page.getByText(/live market data, customizable dashboards, and actionable analytics/i)).toBeVisible();
+    await expect(page.getByText(/ultra-fast trade engine delivers execution at the speed of opportunity/i)).toBeVisible();
+  });
+
+  test('shows "Start Trading Now" button linking to signup', async ({ page }) => {
+    const ctaBtn = page.getByRole('link', { name: 'Start Trading Now' });
+    await expect(ctaBtn).toBeVisible();
+    await expect(ctaBtn).toHaveAttribute('href', '/signup');
+    await ctaBtn.click();
     await expect(page).toHaveURL('/signup');
   });
 
-  test('feature cards have correct icons (SVGs present)', async ({ page }) => {
-    // There are 3 svg icons in .border-t-4.border-blue-700 divs
-    const cards = page.locator('.border-t-4.border-blue-700');
-    await expect(cards).toHaveCount(3);
-    for (let i = 0; i < 3; i++) {
-      const svg = cards.nth(i).locator('svg');
-      await expect(svg).toBeVisible();
-      // Check basic properties
-      await expect(svg).toHaveAttribute('width', '28');
-      await expect(svg).toHaveAttribute('height', '28');
-    }
-  });
-
-  test('basic accessibility: headings and links are visible', async ({ page }) => {
-    // Heading
-    await expect(page.getByRole('heading', { name: /SentinelTrade/ })).toBeVisible();
-    // All links in landing page
-    const links = page.locator('a');
-    const count = await links.count();
-    expect(count).toBeGreaterThan(0);
-    for (let i = 0; i < count; i++) {
-      await expect(links.nth(i)).toHaveAttribute('href', /\//);
-    }
+  test('basic accessibility: all major headings use semantic tags', async ({ page }) => {
+    // Check that h2 is present for the section
+    const h2 = page.locator('h2.font-bold');
+    await expect(h2.filter({ hasText: 'Why Choose SentinelTrade?' })).toHaveCount(1);
+    // Each feature card should have h3 heading
+    const h3s = page.locator('h3.font-bold');
+    await expect(h3s).toHaveCount(3);
   });
 });

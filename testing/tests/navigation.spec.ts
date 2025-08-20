@@ -1,104 +1,102 @@
 import { test, expect } from '@playwright/test';
 
-const navLinks = [
-  { label: 'Market Data', path: '/market-data', id: 'navlink-marketdata' },
-  { label: 'Portfolio', path: '/portfolio', id: 'navlink-portfolio' },
-  { label: 'Order Management', path: '/order-management', id: 'navlink-ordermanagement' }
+const mainNavLinks = [
+  { label: 'Market Data', path: '/market-data' },
+  { label: 'Portfolio', path: '/portfolio' },
+  { label: 'Orders', path: '/order-management' },
+  { label: 'Compliance', path: '/compliance-monitoring' },
+  { label: 'Audit Trail', path: '/audit-trail' },
 ];
 
-const authLinks = [
-  { label: 'Login', path: '/login', id: 'navlink-login' },
-  { label: 'Sign Up', path: '/signup', id: 'navlink-sign up' }
+const guestLinks = [
+  { label: 'Login', path: '/login' },
+  { label: 'Sign Up', path: '/signup' },
 ];
 
-test.describe('Navigation Bar', () => {
+const userLinks = [
+  { label: 'Account', path: '/account' },
+  { label: 'Logout', path: null },
+];
+
+test.describe('Navigation Bar (Guest)', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
   });
 
-  test('renders logo and brand text with correct styles', async ({ page }) => {
-    const logo = page.locator('nav img[src="/branding/assets/logo-0.png"]');
-    await expect(logo).toBeVisible();
-    const brand = page.locator('span', { hasText: 'TradeSecure' });
-    await expect(brand).toBeVisible();
-    await expect(brand).toHaveClass(/text-2xl/);
-    await expect(brand).toHaveText('TradeSecure');
-  });
-
-  test('renders all navigation links in desktop view', async ({ page }) => {
-    await page.setViewportSize({ width: 1280, height: 800 });
-    for (const link of navLinks) {
-      const navLink = page.locator(`#${link.id}`);
-      await expect(navLink).toBeVisible();
-      await expect(navLink).toHaveText(link.label);
-    }
-  });
-
-  test('renders auth links (Login, Sign Up)', async ({ page }) => {
-    for (const link of authLinks) {
-      // ID is navlink-login or navlink-signup (no space)
-      const id = link.id === 'navlink-sign up' ? 'navlink-signup' : link.id;
-      const navLink = page.locator(`#${id}`);
-      await expect(navLink).toBeVisible();
-      await expect(navLink).toHaveText(link.label);
-    }
-  });
-
-  test('navigates to page when clicking nav links', async ({ page }) => {
-    await page.setViewportSize({ width: 1280, height: 800 });
-    for (const link of navLinks) {
-      const navLink = page.locator(`#${link.id}`);
-      await navLink.click();
-      await expect(page).toHaveURL(link.path);
-      // Optionally check active style
-      await expect(navLink).toHaveClass(/bg-blue-100/);
-      // Navigate back to home for next test
-      await page.goto('/');
-    }
-  });
-
-  test('navigates to Login and Sign Up pages from auth links', async ({ page }) => {
-    for (const link of authLinks) {
-      const id = link.id === 'navlink-sign up' ? 'navlink-signup' : link.id;
-      const navLink = page.locator(`#${id}`);
-      await navLink.click();
-      await expect(page).toHaveURL(link.path);
-      await page.goto('/');
-    }
-  });
-
-  test('logo click navigates to home', async ({ page }) => {
-    await page.goto('/portfolio');
-    const logo = page.locator('nav img[src="/branding/assets/logo-0.png"]');
-    await logo.click();
+  test('shows brand logo and navigates home when clicked', async ({ page }) => {
+    const logoLink = page.locator('nav a[href="/"] img');
+    await expect(logoLink).toBeVisible();
+    await page.locator('nav a[href="/"]').click();
     await expect(page).toHaveURL('/');
   });
 
-  test('active nav link is highlighted on respective page', async ({ page }) => {
-    await page.setViewportSize({ width: 1280, height: 800 });
-    for (const link of navLinks) {
-      await page.goto(link.path);
-      const navLink = page.locator(`#${link.id}`);
-      await expect(navLink).toHaveClass(/bg-blue-100/);
-    }
-    for (const link of authLinks) {
-      const id = link.id === 'navlink-sign up' ? 'navlink-signup' : link.id;
-      await page.goto(link.path);
-      const navLink = page.locator(`#${id}`);
-      await expect(navLink).toHaveClass(/bg-blue-100/);
-    }
+  for (const nav of mainNavLinks) {
+    test(`shows "${nav.label}" link and navigates to ${nav.path}`, async ({ page }) => {
+      const link = page.getByRole('link', { name: nav.label });
+      await expect(link).toBeVisible();
+      await link.click();
+      await expect(page).toHaveURL(nav.path);
+    });
+  }
+
+  for (const nav of guestLinks) {
+    test(`shows "${nav.label}" link and navigates to ${nav.path}`, async ({ page }) => {
+      const link = page.getByRole('link', { name: nav.label });
+      await expect(link).toBeVisible();
+      await link.click();
+      await expect(page).toHaveURL(nav.path);
+    });
+  }
+
+  test('does not show Account or Logout when not authenticated', async ({ page }) => {
+    await expect(page.getByRole('link', { name: 'Account' })).toHaveCount(0);
+    await expect(page.locator('#nav-logout')).toHaveCount(0);
   });
 
-  test('navigation is accessible (nav landmark, links have role/link)', async ({ page }) => {
-    // nav landmark
-    const nav = page.locator('nav');
-    await expect(nav).toBeVisible();
-    // All nav links should be role link
-    const links = page.locator('nav a');
-    const count = await links.count();
-    expect(count).toBeGreaterThan(0);
-    for (let i = 0; i < count; i++) {
-      await expect(links.nth(i)).toHaveAttribute('href', /\//);
-    }
+  test('active home link is highlighted when on /', async ({ page }) => {
+    const homeNav = page.locator('nav a[href="/"]').first();
+    await expect(homeNav).toHaveClass(/bg-blue-50/);
+    await expect(homeNav).toHaveClass(/text-blue-700/);
+  });
+});
+
+test.describe('Navigation Bar (Authenticated)', () => {
+  test.beforeEach(async ({ page }) => {
+    // Mock authentication: set localStorage or use a test route if available
+    await page.addInitScript(() => {
+      window.localStorage.setItem('auth-user', JSON.stringify({ id: 1, username: 'demo' }));
+    });
+    await page.goto('/');
+  });
+
+  for (const nav of mainNavLinks) {
+    test(`shows "${nav.label}" link and navigates to ${nav.path} (auth)`, async ({ page }) => {
+      const link = page.getByRole('link', { name: nav.label });
+      await expect(link).toBeVisible();
+      await link.click();
+      await expect(page).toHaveURL(nav.path);
+    });
+  }
+
+  test('shows Account and Logout, hides Login/Sign Up when authenticated', async ({ page }) => {
+    await expect(page.getByRole('link', { name: 'Account' })).toBeVisible();
+    await expect(page.locator('#nav-logout')).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Login' })).toHaveCount(0);
+    await expect(page.getByRole('link', { name: 'Sign Up' })).toHaveCount(0);
+  });
+
+  test('Account link navigates to /account', async ({ page }) => {
+    const accountLink = page.getByRole('link', { name: 'Account' });
+    await accountLink.click();
+    await expect(page).toHaveURL('/account');
+  });
+
+  test('Logout button triggers logout and shows guest links', async ({ page }) => {
+    await page.locator('#nav-logout').click();
+    // Simulate AuthContext logout: page should now show Login/Sign Up
+    await expect(page.getByRole('link', { name: 'Login' })).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Sign Up' })).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Account' })).toHaveCount(0);
+    await expect(page.locator('#nav-logout')).toHaveCount(0);
   });
 });
